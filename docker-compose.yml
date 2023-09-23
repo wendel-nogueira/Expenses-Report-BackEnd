@@ -1,0 +1,13 @@
+version: '3'
+services:
+  users-microservice:
+    container_name: users-microservice
+    image: usersmicroservice
+    build:
+      context: ./ExpensesReport.Users
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - "5000:80"
+      - "5001:443"
