@@ -8,7 +8,7 @@
 ![GitHub language count](https://img.shields.io/github/languages/count/wendel-nogueira/Expenses-Report-BackEnd?style=for-the-badge)
 ![GitHub forks](https://img.shields.io/github/forks/wendel-nogueira/Expenses-Report-BackEnd?style=for-the-badge)
 ![GitHub open issues](https://img.shields.io/github/issues/wendel-nogueira/Expenses-Report-BackEnd?style=for-the-badge)
-![GitHub open pull requests](https://img.shields.io/github/pr-raw/wendel-nogueira/Expenses-Report-BackEnd?style=for-the-badge)
+![GitHub open pull requests](https://img.shields.io/github/issues-pr/wendel-nogueira/Expenses-Report-BackEnd?style=for-the-badge)
 
 </div>
 
@@ -29,7 +29,7 @@ To install Expenses Report, follow these steps:
 * Navigate to the folder in your terminal:
 
 ```
-cd project_folder
+cd path/to/project
 ```
 
 * Run the docker-compose command to create the project's containers:
@@ -40,6 +40,8 @@ docker-compose up -d --build
 
 After this, the project will be up and running 😊
 
-<!-- ## ☕ Using Expenses Report
+## ☕ Using Expenses Report
 
-To use the API, simply open your web browser and navigate to http://localhost. -->
+To use the API, simply open your web browser and navigate to:
+
+* [http://localhost:5000/swagger](http://localhost:5000/swagger) - for user microservice.
