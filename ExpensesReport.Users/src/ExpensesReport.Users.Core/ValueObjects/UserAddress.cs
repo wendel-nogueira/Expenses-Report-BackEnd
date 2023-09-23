@@ -11,6 +11,8 @@ namespace ExpensesReport.Users.Core.ValueObjects
             State = state;
             Zip = zip;
             Country = country;
+
+            Validate();
         }
 
         [Required(ErrorMessage = "Address is required")]
@@ -38,9 +40,13 @@ namespace ExpensesReport.Users.Core.ValueObjects
             return $"{Address}, {City}, {State}, {Zip}, {Country}";
         }
 
-        public void validate()
+        public void Validate()
         {
+            var context = new ValidationContext(this, serviceProvider: null, items: null);
+            var results = new List<ValidationResult>();
 
+            if (!Validator.TryValidateObject(this, context, results, true))
+                throw new Exception(string.Join(" | ", results.Select(x => x.ErrorMessage)));
         }
     }
 }

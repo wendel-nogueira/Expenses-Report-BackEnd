@@ -3,7 +3,10 @@
     public class BadRequestException : Exception
     {
         public BadRequestException() { }
-        public BadRequestException(string message) : base(message) { }
-        public BadRequestException(string message, Exception innerException) : base(message, innerException) { }
+
+        public string?[]? Errors { get; set; }
+
+        public BadRequestException(string message, string?[]? errors) : base(message) => Errors = errors;
+        public BadRequestException(string message, Exception inner) : base(message, inner) { }
     }
 }

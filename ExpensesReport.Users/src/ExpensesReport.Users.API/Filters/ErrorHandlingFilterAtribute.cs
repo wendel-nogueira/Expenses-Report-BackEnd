@@ -14,16 +14,18 @@ namespace ExpensesReport.Users.API.Filters
             var exception = context.Exception;
             var code = HttpStatusCode.InternalServerError;
             var type = "https://tools.ietf.org/html/rfc7231#section-6.6.1";
+            string?[]? errors = Array.Empty<string>();
 
             if (exception is NotFoundException)
             {
                 code = HttpStatusCode.NotFound;
                 type = "https://tools.ietf.org/html/rfc7231#section-6.5.4";
             }
-            else if (exception is BadRequestException)
+            else if (exception is BadRequestException badRequestException)
             {
                 code = HttpStatusCode.BadRequest;
                 type = "https://tools.ietf.org/html/rfc7231#section-6.5.1";
+                errors = badRequestException.Errors;
             }
             else if (exception is UnauthorizedException)
             {
@@ -37,7 +39,9 @@ namespace ExpensesReport.Users.API.Filters
                 Title = "An error occurred while processing your request.",
                 Status = (int)code,
                 Detail = exception.Message,
-                Instance = context.HttpContext.Request.Path
+                Instance = context.HttpContext.Request.Path,
+                Extensions = { { "Errors", errors } }
+
             };
 
             context.Result = new ObjectResult(problemDetails);

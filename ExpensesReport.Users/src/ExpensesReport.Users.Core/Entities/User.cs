@@ -18,6 +18,8 @@ namespace ExpensesReport.Users.Core.Entities
             CreatedAt = DateTime.Now;
             UpdatedAt = DateTime.Now;
             Supervisors = new List<Guid>();
+
+            Validate();
         }
 
         public UserName Name { get; set; }
@@ -85,6 +87,15 @@ namespace ExpensesReport.Users.Core.Entities
             }
 
             return new string(chars);
+        }
+
+        public void Validate()
+        {
+            var context = new ValidationContext(this, serviceProvider: null, items: null);
+            var results = new List<ValidationResult>();
+
+            if (!Validator.TryValidateObject(this, context, results, true))
+                throw new Exception(string.Join(" | ", results.Select(x => x.ErrorMessage)));
         }
     }
 }

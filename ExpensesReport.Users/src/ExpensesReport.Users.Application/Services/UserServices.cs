@@ -1,18 +1,14 @@
 ﻿using ExpensesReport.Users.API.Exceptions;
 using ExpensesReport.Users.Application.InputModels;
 using ExpensesReport.Users.Application.ViewModels;
+using ExpensesReport.Users.Application.Validators;
 using ExpensesReport.Users.Core.Repositories;
 
 namespace ExpensesReport.Users.Application.Services
 {
-    public class UserServices : IUserServices
+    public class UserServices(IUserRepository userRepository) : IUserServices
     {
-        private readonly IUserRepository _userRepository;
-
-        public UserServices(IUserRepository userRepository)
-        {
-            _userRepository = userRepository;
-        }
+        private readonly IUserRepository _userRepository = userRepository;
 
         public async Task<UserViewModel> GetUserById(Guid id)
         {
@@ -44,13 +40,18 @@ namespace ExpensesReport.Users.Application.Services
         public async Task<UserViewModel> AddUser(AddUserInputModel inputModel)
         {
             if (inputModel == null)
-                throw new BadRequestException("User data is required! Check that all fields have been filled in correctly.");
+                throw new BadRequestException("User data is required! Check that all fields have been filled in correctly.", []);
+
+            var errors = InputModelValidator.Validate(inputModel);
+
+            if (errors != null && errors.Length > 0)
+                throw new BadRequestException("User data is required! Check that all fields have been filled in correctly.", errors);
 
             var user = inputModel.ToEntity();
             var emailAlreadyExists = await _userRepository.GetByEmailAsync(user.Email);
 
             if (emailAlreadyExists != null)
-                throw new BadRequestException("Email already exists!");
+                throw new BadRequestException("Email already exists!", []);
 
             await _userRepository.AddAsync(user);
 
@@ -60,7 +61,13 @@ namespace ExpensesReport.Users.Application.Services
         public async Task<UserViewModel> UpdateUser(Guid id, UpdateUserInputModel inputModelToUpdate)
         {
             if (inputModelToUpdate == null)
-                throw new BadRequestException("User data is required! Check that all fields have been filled in correctly.");
+                throw new BadRequestException(
+                    "User data is required! Check that all fields have been filled in correctly.", []);
+
+            var errors = InputModelValidator.Validate(inputModelToUpdate);
+
+            if (errors != null && errors.Length > 0)
+                throw new BadRequestException("User data is required! Check that all fields have been filled in correctly.", errors);
 
             var user = await _userRepository.GetByIdAsync(id);
 
@@ -70,7 +77,7 @@ namespace ExpensesReport.Users.Application.Services
                 var emailAlreadyExists = await _userRepository.GetByEmailAsync(userToUpdate.Email);
 
                 if (emailAlreadyExists != null && emailAlreadyExists.Id != id)
-                    throw new BadRequestException("Email already exists!");
+                    throw new BadRequestException("Email already exists!", []);
 
                 await _userRepository.UpdateAsync(id, userToUpdate);
 
@@ -96,7 +103,7 @@ namespace ExpensesReport.Users.Application.Services
         public async Task<UserViewModel> AddUserSupervisor(Guid id, Guid supervisorId)
         {
             if (id == supervisorId)
-                throw new BadRequestException("User cannot be his own supervisor!");
+                throw new BadRequestException("User cannot be his own supervisor!", []);
 
             var user = await _userRepository.GetByIdAsync(id);
 
@@ -119,7 +126,7 @@ namespace ExpensesReport.Users.Application.Services
         public async Task<UserViewModel> DeleteUserSupervisor(Guid id, Guid supervisorId)
         {
             if (id == supervisorId)
-                throw new BadRequestException("User cannot be its own supervisor!");
+                throw new BadRequestException("User cannot be its own supervisor!", []);
 
             var user = await _userRepository.GetByIdAsync(id);
 
