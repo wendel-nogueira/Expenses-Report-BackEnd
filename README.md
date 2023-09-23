@@ -7,8 +7,8 @@
 ![GitHub repo size](https://img.shields.io/github/repo-size/wendel-nogueira/Expenses-Report-BackEnd?style=for-the-badge)
 ![GitHub language count](https://img.shields.io/github/languages/count/wendel-nogueira/Expenses-Report-BackEnd?style=for-the-badge)
 ![GitHub forks](https://img.shields.io/github/forks/wendel-nogueira/Expenses-Report-BackEnd?style=for-the-badge)
-![Bitbucket open issues](https://img.shields.io/bitbucket/issues/wendel-nogueira/Expenses-Report-BackEnd?style=for-the-badge)
-![Bitbucket open pull requests](https://img.shields.io/bitbucket/pr-raw/wendel-nogueira/Expenses-Report-BackEnd?style=for-the-badge)
+![GitHub open issues](https://img.shields.io/github/issues/wendel-nogueira/Expenses-Report-BackEnd?style=for-the-badge)
+![GitHub open pull requests](https://img.shields.io/github/pr-raw/wendel-nogueira/Expenses-Report-BackEnd?style=for-the-badge)
 
 </div>
 
