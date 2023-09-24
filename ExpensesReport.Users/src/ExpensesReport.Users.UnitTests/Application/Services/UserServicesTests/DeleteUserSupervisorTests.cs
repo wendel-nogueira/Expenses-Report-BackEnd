@@ -28,6 +28,7 @@ namespace ExpensesReport.Users.UnitTests.Application.Services.UserServicesTests
 
             var user = usersMock.First();
             var supervisorToDelete = usersMock.Last();
+            user.AddSupervisorToUser(supervisorToDelete.Id);
             userRepositoryMock.Setup(userRepository => userRepository.GetByIdAsync(user.Id)).ReturnsAsync(user);
             userRepositoryMock.Setup(userRepository => userRepository.GetByIdAsync(supervisorToDelete.Id)).ReturnsAsync(supervisorToDelete);
             var result = userServices.DeleteUserSupervisor(user.Id, supervisorToDelete.Id);
@@ -84,6 +85,30 @@ namespace ExpensesReport.Users.UnitTests.Application.Services.UserServicesTests
 
             exception.Message.ShouldBe("Supervisor not found!");
             userRepositoryMock.Verify(userRepository => userRepository.AddSupervisorAsync(supervisorToDelete.Id, Guid.NewGuid()), Times.Never);
+        }
+
+        [Fact]
+        public async void InvalidUserAndSupervisorNotDeleted_WhenSupervisorDoesNotExistsInUser()
+        {
+            var usersMock = Enumerable.Range(0, 2).Select(i => new User(
+                new UserName("FirstName", "LastName"),
+                (UserRole)1,
+                $"test{i}@gmail.com",
+                new UserAddress("address", "city", "state", "country", "zip")
+                ));
+            var userRepositoryMock = new Mock<IUserRepository>();
+            var userServices = new UserServices(userRepositoryMock.Object);
+
+
+            var user = usersMock.First();
+            var supervisorToDelete = usersMock.Last();
+            userRepositoryMock.Setup(userRepository => userRepository.GetByIdAsync(user.Id)).ReturnsAsync(user);
+            userRepositoryMock.Setup(userRepository => userRepository.GetByIdAsync(supervisorToDelete.Id)).ReturnsAsync(supervisorToDelete);
+            var exception = await Assert.ThrowsAsync<BadRequestException>(() => userServices.DeleteUserSupervisor(user.Id, supervisorToDelete.Id));
+
+
+            exception.Message.ShouldBe("Supervisor does not exists!");
+            userRepositoryMock.Verify(userRepository => userRepository.DeleteSupervisorAsync(user.Id, supervisorToDelete.Id), Times.Never);
         }
     }
 }

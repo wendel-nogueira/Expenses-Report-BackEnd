@@ -85,6 +85,31 @@ namespace ExpensesReport.Users.UnitTests.Application.Services.UserServicesTests
         }
 
         [Fact]
+        public async void InvalidUserAndSupervisorNotAdded_WhenSupervisorAlreadyExists()
+        {
+            var usersMock = Enumerable.Range(0, 2).Select(i => new User(
+                new UserName("FirstName", "LastName"),
+                (UserRole)1,
+                $"test{i}@gmail.com",
+                new UserAddress("address", "city", "state", "country", "zip")
+                ));
+            var userRepositoryMock = new Mock<IUserRepository>();
+            var userServices = new UserServices(userRepositoryMock.Object);
+
+
+            var userToAdd = usersMock.First();
+            var supervisorToAdd = usersMock.Last();
+            userToAdd.AddSupervisorToUser(supervisorToAdd.Id);
+            userRepositoryMock.Setup(userRepository => userRepository.GetByIdAsync(userToAdd.Id)).ReturnsAsync(userToAdd);
+            userRepositoryMock.Setup(userRepository => userRepository.GetByIdAsync(supervisorToAdd.Id)).ReturnsAsync(supervisorToAdd);
+            var exception = await Assert.ThrowsAsync<BadRequestException>(() => userServices.AddUserSupervisor(userToAdd.Id, supervisorToAdd.Id));
+
+
+            exception.Message.ShouldBe("Supervisor already exists!");
+            userRepositoryMock.Verify(userRepository => userRepository.AddSupervisorAsync(userToAdd.Id, supervisorToAdd.Id), Times.Never);
+        }
+
+        [Fact]
         public async void InvalidUserAndSupervisorNotAdded_WhenUserIsSupervisor()
         {
             var usersMock = Enumerable.Range(0, 1).Select(i => new User(

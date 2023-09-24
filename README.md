@@ -66,43 +66,43 @@ Below, you'll find all open and completed tasks during the project implementatio
 - [ ] Implement identity microservice.
     - [ ] Implement application routes.
     - [ ] Integrate with the database storage (MySQL).
-    - [ ] Implement unit and integration tests.
+    - [ ] Implement tests.
     - [ ] Provide a means of authentication and authorization for other microservices.
     - [ ] Deploy to Azure AKS.
 - [ ] Implement users microservice.
     - [x] Implement application routes.
     - [ ] Integrate with the database storage (MySQL).
-    - [-] Implement unit and integration tests.
+    - [x] Implement tests.
     - [ ] Implement authentication and authorization for the routes.
     - [ ] Deploy to Azure AKS.
 - [ ] Implement projects microservice.
     - [ ] Implement application routes.
     - [ ] Integrate with the database storage (MySQL).
-    - [ ] Implement unit and integration tests.
+    - [ ] Implement tests.
     - [ ] Implement authentication and authorization for the routes.
     - [ ] Deploy to Azure AKS.
 - [ ] Implement departments microservice.
     - [ ] Implement application routes.
     - [ ] Integrate with the database storage (MySQL).
-    - [ ] Implement unit and integration tests.
+    - [ ] Implement tests.
     - [ ] Implement authentication and authorization for the routes.
     - [ ] Deploy to Azure AKS.
 - [ ] Implement expenses microservice.
     - [ ] Implement application routes.
     - [ ] Integrate with the database storage (Azure Cosmos DB).
-    - [ ] Implement unit and integration tests.
+    - [ ] Implement tests.
     - [ ] Implement authentication and authorization for the routes.
     - [ ] Deploy to Azure AKS.
 - [ ] Implement export microservice.
     - [ ] Implement application routes.
     - [ ] Integrate with the database storage (Azure Cosmos DB).
-    - [ ] Implement unit and integration tests.
+    - [ ] Implement tests.
     - [ ] Implement authentication and authorization for the routes.
     - [ ] Deploy to Azure AKS.
 - [ ] Implement file upload microservice.
     - [ ] Implement application routes.
     - [ ] Integrate with file storage (Azure Files).
-    - [ ] Implement unit and integration tests.
+    - [ ] Implement tests.
     - [ ] Implement authentication and authorization for the routes.
     - [ ] Deploy to Azure AKS.
 - [ ] Implement API gateway.
