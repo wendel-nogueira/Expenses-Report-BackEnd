@@ -109,6 +109,9 @@ namespace ExpensesReport.Users.Application.Services
 
             if (user != null)
             {
+                if (user.Supervisors.Any(x => x.SupervisorId == supervisorId))
+                    throw new BadRequestException("Supervisor already exists!", []);
+
                 var supervisor = await _userRepository.GetByIdAsync(supervisorId);
 
                 if (supervisor != null)
@@ -136,6 +139,9 @@ namespace ExpensesReport.Users.Application.Services
 
                 if (supervisor != null)
                 {
+                    if (!user.Supervisors.Any(x => x.SupervisorId == supervisorId))
+                        throw new BadRequestException("Supervisor does not exists!", []);
+
                     await _userRepository.DeleteSupervisorAsync(id, supervisorId);
                     return UserViewModel.FromEntity(user);
                 }
