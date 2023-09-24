@@ -72,7 +72,7 @@ Below, you'll find all open and completed tasks during the project implementatio
 - [ ] Implement users microservice.
     - [x] Implement application routes.
     - [ ] Integrate with the database storage (MySQL).
-    - [ ] Implement unit and integration tests.
+    - [-] Implement unit and integration tests.
     - [ ] Implement authentication and authorization for the routes.
     - [ ] Deploy to Azure AKS.
 - [ ] Implement projects microservice.
