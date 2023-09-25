@@ -11,6 +11,7 @@ namespace ExpensesReport.Users.Application.Services
         Task<UserViewModel> AddUser(AddUserInputModel inputModel);
         Task<UserViewModel> UpdateUser(Guid id, UpdateUserInputModel inputModel);
         Task DeleteUser(Guid id);
+        Task<IEnumerable<UserViewModel>> GetUserSupervisorsById(Guid id);
         Task<UserViewModel> AddUserSupervisor(Guid id, Guid supervisorId);
         Task<UserViewModel> DeleteUserSupervisor(Guid id, Guid supervisorId);
     }

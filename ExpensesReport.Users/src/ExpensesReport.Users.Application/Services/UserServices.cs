@@ -1,7 +1,7 @@
-﻿using ExpensesReport.Users.API.Exceptions;
-using ExpensesReport.Users.Application.InputModels;
+﻿using ExpensesReport.Users.Application.InputModels;
 using ExpensesReport.Users.Application.ViewModels;
 using ExpensesReport.Users.Application.Validators;
+using ExpensesReport.Users.Application.Exceptions;
 using ExpensesReport.Users.Core.Repositories;
 
 namespace ExpensesReport.Users.Application.Services
@@ -100,6 +100,20 @@ namespace ExpensesReport.Users.Application.Services
             throw new NotFoundException("User not found!");
         }
 
+        public async Task<IEnumerable<UserViewModel>> GetUserSupervisorsById(Guid id)
+        {
+            var user = await _userRepository.GetByIdAsync(id);
+
+            if (user != null)
+            {
+                var userSupervisors = await _userRepository.GetUserSupervisorsByIdAsync(id);
+
+                return userSupervisors.Select(UserViewModel.FromEntity);
+            }
+
+            throw new NotFoundException("User not found!");
+        }
+
         public async Task<UserViewModel> AddUserSupervisor(Guid id, Guid supervisorId)
         {
             if (id == supervisorId)
@@ -109,6 +123,9 @@ namespace ExpensesReport.Users.Application.Services
 
             if (user != null)
             {
+                if (user.Supervisors.Any(x => x.SupervisorId == supervisorId))
+                    throw new BadRequestException("Supervisor already exists!", []);
+
                 var supervisor = await _userRepository.GetByIdAsync(supervisorId);
 
                 if (supervisor != null)
@@ -136,6 +153,9 @@ namespace ExpensesReport.Users.Application.Services
 
                 if (supervisor != null)
                 {
+                    if (!user.Supervisors.Any(x => x.SupervisorId == supervisorId))
+                        throw new BadRequestException("Supervisor does not exists!", []);
+
                     await _userRepository.DeleteSupervisorAsync(id, supervisorId);
                     return UserViewModel.FromEntity(user);
                 }
