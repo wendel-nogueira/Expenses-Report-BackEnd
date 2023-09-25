@@ -1,7 +1,7 @@
-﻿using ExpensesReport.Users.API.Exceptions;
-using ExpensesReport.Users.Application.InputModels;
+﻿using ExpensesReport.Users.Application.InputModels;
 using ExpensesReport.Users.Application.ViewModels;
 using ExpensesReport.Users.Application.Validators;
+using ExpensesReport.Users.Application.Exceptions;
 using ExpensesReport.Users.Core.Repositories;
 
 namespace ExpensesReport.Users.Application.Services

@@ -1,5 +1,5 @@
 ﻿using AutoFixture;
-using ExpensesReport.Users.API.Exceptions;
+using ExpensesReport.Users.Application.Exceptions;
 using ExpensesReport.Users.Application.InputModels;
 using ExpensesReport.Users.Application.Services;
 using ExpensesReport.Users.Core.Entities;

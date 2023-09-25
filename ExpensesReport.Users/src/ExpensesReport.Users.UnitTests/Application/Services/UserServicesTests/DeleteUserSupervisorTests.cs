@@ -1,4 +1,4 @@
-﻿using ExpensesReport.Users.API.Exceptions;
+﻿using ExpensesReport.Users.Application.Exceptions;
 using ExpensesReport.Users.Application.Services;
 using ExpensesReport.Users.Core.Entities;
 using ExpensesReport.Users.Core.Enums;

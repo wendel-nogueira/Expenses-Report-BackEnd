@@ -1,5 +1,4 @@
-﻿using ExpensesReport.Users.API.Exceptions;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace ExpensesReport.Users.Application.Validators
 {

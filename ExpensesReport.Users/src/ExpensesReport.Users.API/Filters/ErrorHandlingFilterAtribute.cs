@@ -1,4 +1,4 @@
-﻿using ExpensesReport.Users.API.Exceptions;
+﻿using ExpensesReport.Users.Application.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Net;
