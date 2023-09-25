@@ -26,6 +26,12 @@ To install Expenses Report API, follow these steps:
 
 * Clone the repository to a folder on your computer.
 
+* Open the project folder.
+
+* Rename the file .env.example to .env.
+
+* Open the terminal.
+
 * Navigate to the folder in your terminal:
 
 ```
@@ -71,7 +77,7 @@ Below, you'll find all open and completed tasks during the project implementatio
     - [ ] Deploy to Azure AKS.
 - [ ] Implement users microservice.
     - [x] Implement application routes.
-    - [ ] Integrate with the database storage (MySQL).
+    - [x] Integrate with the database storage (MySQL).
     - [x] Implement tests.
     - [ ] Implement authentication and authorization for the routes.
     - [ ] Deploy to Azure AKS.

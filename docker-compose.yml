@@ -3,11 +3,37 @@ services:
   users-microservice:
     container_name: users-microservice
     image: usersmicroservice
+    restart: always
     build:
       context: ./ExpensesReport.Users
       dockerfile: Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
     ports:
-      - "5000:80"
-      - "5001:443"
+      - 5000:80
+      - 5001:443
+    depends_on:
+      - users-database
+    networks:
+      - expenses-report-network
+
+  users-database:
+    container_name: users-database
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${USER_DATABASE}
+      MYSQL_USER: ${USER_DATABASE_USER}
+      MYSQL_PASSWORD: ${USER_DATABASE_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${USER_DATABASE_ROOT_PASSWORD}
+    ports:
+      - ${USER_DATABASE_PORT}:3306
+    volumes:
+      - ./mysql/${USER_DATABASE_VOLUME}:/var/lib/mysql
+    networks:
+      - expenses-report-network
+
+
+networks:
+  expenses-report-network:
+    driver: bridge

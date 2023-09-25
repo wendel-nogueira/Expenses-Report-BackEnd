@@ -6,6 +6,9 @@ namespace ExpensesReport.Users.Core.Entities
 {
     public class User : EntityBase
     {
+        [Obsolete("Parameterless constructor should not be used directly.")]
+        private User() { }
+
         public User(UserName name, UserRole role, string email, UserAddress userAddress)
         {
             Name = name;
