@@ -10,6 +10,7 @@ namespace ExpensesReport.Users.Core.Repositories
         Task AddAsync(User user);
         Task UpdateAsync(Guid id, User userUpdate);
         Task DeleteAsync(Guid id);
+        Task<IEnumerable<User>> GetUserSupervisorsByIdAsync(Guid id);
         Task AddSupervisorAsync(Guid userId, Guid supervisorId);
         Task DeleteSupervisorAsync(Guid userId, Guid supervisorId);
     }

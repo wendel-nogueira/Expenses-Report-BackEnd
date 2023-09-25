@@ -6,6 +6,9 @@ namespace ExpensesReport.Users.Core.Entities
 {
     public class User : EntityBase
     {
+        [Obsolete("Parameterless constructor should not be used directly.")]
+        private User() { }
+
         public User(UserName name, UserRole role, string email, UserAddress userAddress)
         {
             Name = name;
@@ -17,7 +20,7 @@ namespace ExpensesReport.Users.Core.Entities
             IsDeleted = false;
             CreatedAt = DateTime.Now;
             UpdatedAt = DateTime.Now;
-            Supervisors = new List<Guid>();
+            Supervisors = new List<UserSupervisor>();
 
             Validate();
         }
@@ -30,6 +33,7 @@ namespace ExpensesReport.Users.Core.Entities
 
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress(ErrorMessage = "Email must be a valid email")]
+        [StringLength(100, ErrorMessage = "Email must be between 2 and 100 characters", MinimumLength = 2)]
         public string Email { get; set; }
 
         public string Password { get; set; }
@@ -42,7 +46,7 @@ namespace ExpensesReport.Users.Core.Entities
 
         public DateTime UpdatedAt { get; set; }
 
-        public List<Guid> Supervisors { get; set; }
+        public virtual ICollection<UserSupervisor> Supervisors { get; set; }
 
         public void Delete()
         {
@@ -61,18 +65,17 @@ namespace ExpensesReport.Users.Core.Entities
 
         public void AddSupervisorToUser(Guid supervisorId)
         {
-            if (Supervisors.Contains(supervisorId))
-                throw new Exception("Supervisor already exists");
+            var userSupervisor = new UserSupervisor(Id, supervisorId);
 
-            Supervisors.Add(supervisorId);
+            Supervisors.Add(userSupervisor);
         }
 
         public void RemoveSupervisorFromUser(Guid supervisorId)
         {
-            if (!Supervisors.Contains(supervisorId))
-                throw new Exception("Supervisor does not exists");
+            var userSupervisor = Supervisors.FirstOrDefault(x => x.SupervisorId == supervisorId);
 
-            Supervisors.Remove(supervisorId);
+            if (userSupervisor != null)
+                Supervisors.Remove(userSupervisor);
         }
 
         public static string GeneratePassword()
