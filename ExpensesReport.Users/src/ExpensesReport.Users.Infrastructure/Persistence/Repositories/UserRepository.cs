@@ -45,9 +45,7 @@ namespace ExpensesReport.Users.Infrastructure.Persistence.Repositories
             var user = await _context.Users.SingleOrDefaultAsync(x => x.Id == id);
 
             if (user == null)
-            {
                 return;
-            }
 
             user.Update(userUpdate);
             await _context.SaveChangesAsync();
@@ -58,12 +56,21 @@ namespace ExpensesReport.Users.Infrastructure.Persistence.Repositories
             var user = await _context.Users.SingleOrDefaultAsync(x => x.Id == id);
 
             if (user == null)
-            {
                 return;
-            }
 
             user.Delete();
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<User>> GetUserSupervisorsByIdAsync(Guid id)
+        {
+            var supervisors = await _context.Users
+                .Include(x => x.Supervisors)
+                .ThenInclude(x => x.Supervisor)
+                .Where(x => x.Supervisors.Any(x => x.UserId == id))
+                .ToListAsync();
+
+            return supervisors;
         }
 
         public async Task AddSupervisorAsync(Guid userId, Guid supervisorId)
@@ -71,9 +78,7 @@ namespace ExpensesReport.Users.Infrastructure.Persistence.Repositories
             var user = await _context.Users.SingleOrDefaultAsync(x => x.Id == userId);
 
             if (user == null)
-            {
                 return;
-            }
 
             user.AddSupervisorToUser(supervisorId);
             await _context.SaveChangesAsync();
@@ -84,9 +89,7 @@ namespace ExpensesReport.Users.Infrastructure.Persistence.Repositories
             var user = await _context.Users.SingleOrDefaultAsync(x => x.Id == userId);
 
             if (user == null)
-            {
                 return;
-            }
 
             user.RemoveSupervisorFromUser(supervisorId);
             await _context.SaveChangesAsync();

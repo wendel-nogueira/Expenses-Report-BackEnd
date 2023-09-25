@@ -145,5 +145,21 @@ namespace ExpensesReport.Users.API.Controllers
             await _userServices.DeleteUserSupervisor(id, supervisorId);
             return NoContent();
         }
+
+        /// <summary>
+        /// Get all supervisors from the user
+        /// </summary>
+        /// <param name="id">User identifier</param>
+        /// <returns></returns>
+        /// <response code="204">Success</response>
+        /// <response code="404">Not found</response>
+        [HttpGet("{id}/supervisors")]
+        [ProducesResponseType(typeof(IEnumerable<UserViewModel>), 200)]
+        [ProducesResponseType(typeof(ProblemDetails), 404)]
+        public async Task<IActionResult> GetUserSupervisorsById(Guid id)
+        {
+            var user = await _userServices.GetUserSupervisorsById(id);
+            return Ok(user);
+        }
     }
 }

@@ -100,6 +100,20 @@ namespace ExpensesReport.Users.Application.Services
             throw new NotFoundException("User not found!");
         }
 
+        public async Task<IEnumerable<UserViewModel>> GetUserSupervisorsById(Guid id)
+        {
+            var user = await _userRepository.GetByIdAsync(id);
+
+            if (user != null)
+            {
+                var userSupervisors = await _userRepository.GetUserSupervisorsByIdAsync(id);
+
+                return userSupervisors.Select(UserViewModel.FromEntity);
+            }
+
+            throw new NotFoundException("User not found!");
+        }
+
         public async Task<UserViewModel> AddUserSupervisor(Guid id, Guid supervisorId)
         {
             if (id == supervisorId)
