@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "ExpensesReport.Mail.Infrastructure": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7196"
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "httpPort": 31436,
+      "useSSL": false
+    }
+  }
+}
