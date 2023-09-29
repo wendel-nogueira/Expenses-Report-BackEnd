@@ -33,6 +33,38 @@ services:
     networks:
       - expenses-report-network
 
+  identity-microservice:
+    container_name: identity-microservice
+    image: identitymicroservice
+    restart: always
+    build:
+      context: ./ExpensesReport.Identity
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+    ports:
+      - 5002:80
+      - 5003:443
+    depends_on:
+      - identity-database
+    networks:
+      - expenses-report-network
+
+  identity-database:
+    container_name: identity-database
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${IDENTITY_DATABASE}
+      MYSQL_USER: ${IDENTITY_DATABASE_USER}
+      MYSQL_PASSWORD: ${IDENTITY_DATABASE_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${IDENTITY_DATABASE_ROOT_PASSWORD}
+    ports:
+      - ${IDENTITY_DATABASE_PORT}:3306
+    volumes:
+      - ./mysql/${IDENTITY_DATABASE_VOLUME}:/var/lib/mysql
+    networks:
+      - expenses-report-network
 
 networks:
   expenses-report-network:
