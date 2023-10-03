@@ -21,7 +21,9 @@ namespace ExpensesReport.Identity.Infrastructure.Authentication
             cs.Write(data, 0, data.Length);
             cs.FlushFinalBlock();
 
-            return Convert.ToBase64String(ms.ToArray());
+            string encrypted = Convert.ToBase64String(ms.ToArray());
+
+            return encrypted;
         }
 
         public static string Decrypt(string hashToDecrypt, IConfiguration config)
@@ -34,9 +36,9 @@ namespace ExpensesReport.Identity.Infrastructure.Authentication
             using var ms = new MemoryStream();
             using var cs = new CryptoStream(ms, decryptor, CryptoStreamMode.Write);
 
-            var data = Convert.FromBase64String(hashToDecrypt);
+            var encrypted = Convert.FromBase64String(hashToDecrypt.Replace("%2F", "/"));
 
-            cs.Write(data, 0, data.Length);
+            cs.Write(encrypted, 0, encrypted.Length);
             cs.FlushFinalBlock();
 
             return Encoding.UTF8.GetString(ms.ToArray());

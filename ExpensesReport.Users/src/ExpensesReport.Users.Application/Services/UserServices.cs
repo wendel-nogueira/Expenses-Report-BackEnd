@@ -3,6 +3,7 @@ using ExpensesReport.Users.Application.ViewModels;
 using ExpensesReport.Users.Application.Validators;
 using ExpensesReport.Users.Application.Exceptions;
 using ExpensesReport.Users.Core.Repositories;
+using ExpensesReport.Users.Core.Entities;
 
 namespace ExpensesReport.Users.Application.Services
 {
@@ -20,9 +21,9 @@ namespace ExpensesReport.Users.Application.Services
             throw new NotFoundException("User not found!");
         }
 
-        public async Task<UserViewModel> GetUserByEmail(string email)
+        public async Task<UserViewModel> GetUserByIdentityId(Guid id)
         {
-            var user = await _userRepository.GetByEmailAsync(email);
+            var user = await _userRepository.GetByIdentityIdAsync(id);
 
             if (user != null)
                 return UserViewModel.FromEntity(user);
@@ -39,20 +40,12 @@ namespace ExpensesReport.Users.Application.Services
 
         public async Task<UserViewModel> AddUser(AddUserInputModel inputModel)
         {
-            if (inputModel == null)
-                throw new BadRequestException("User data is required! Check that all fields have been filled in correctly.", []);
-
             var errors = InputModelValidator.Validate(inputModel);
 
             if (errors != null && errors.Length > 0)
                 throw new BadRequestException("User data is required! Check that all fields have been filled in correctly.", errors);
 
             var user = inputModel.ToEntity();
-            var emailAlreadyExists = await _userRepository.GetByEmailAsync(user.Email);
-
-            if (emailAlreadyExists != null)
-                throw new BadRequestException("Email already exists!", []);
-
             await _userRepository.AddAsync(user);
 
             return UserViewModel.FromEntity(user);
@@ -60,10 +53,6 @@ namespace ExpensesReport.Users.Application.Services
 
         public async Task<UserViewModel> UpdateUser(Guid id, UpdateUserInputModel inputModelToUpdate)
         {
-            if (inputModelToUpdate == null)
-                throw new BadRequestException(
-                    "User data is required! Check that all fields have been filled in correctly.", []);
-
             var errors = InputModelValidator.Validate(inputModelToUpdate);
 
             if (errors != null && errors.Length > 0)
@@ -73,28 +62,12 @@ namespace ExpensesReport.Users.Application.Services
 
             if (user != null)
             {
-                var userToUpdate = inputModelToUpdate.ToEntity();
-                var emailAlreadyExists = await _userRepository.GetByEmailAsync(userToUpdate.Email);
+                var newName = inputModelToUpdate.Name == null ? user.Name : inputModelToUpdate.Name!.ToValueObject();
+                var newAddress = inputModelToUpdate.Address == null ? user.Address : inputModelToUpdate.Address!.ToValueObject();
 
-                if (emailAlreadyExists != null && emailAlreadyExists.Id != id)
-                    throw new BadRequestException("Email already exists!", []);
+                await _userRepository.UpdateAsync(id, newName, newAddress);
 
-                await _userRepository.UpdateAsync(id, userToUpdate);
-
-                return UserViewModel.FromEntity(userToUpdate);
-            }
-
-            throw new NotFoundException("User not found!");
-        }
-
-        public async Task DeleteUser(Guid id)
-        {
-            var user = await _userRepository.GetByIdAsync(id);
-
-            if (user != null)
-            {
-                await _userRepository.DeleteAsync(id);
-                return;
+                return UserViewModel.FromEntity(user);
             }
 
             throw new NotFoundException("User not found!");
@@ -123,7 +96,9 @@ namespace ExpensesReport.Users.Application.Services
 
             if (user != null)
             {
-                if (user.Supervisors.Any(x => x.SupervisorId == supervisorId))
+                var userSupervisors = await _userRepository.GetUserSupervisorsByIdAsync(id);
+
+                if (user.Supervisors.Count > 0 && user.Supervisors.Any(x => x.SupervisorId == supervisorId))
                     throw new BadRequestException("Supervisor already exists!", []);
 
                 var supervisor = await _userRepository.GetByIdAsync(supervisorId);
@@ -149,13 +124,15 @@ namespace ExpensesReport.Users.Application.Services
 
             if (user != null)
             {
+                var userSupervisors = await _userRepository.GetUserSupervisorsByIdAsync(id);
+
+                if (user.Supervisors.Count == 0 || !user.Supervisors.Any(x => x.SupervisorId == supervisorId))
+                    throw new BadRequestException("Supervisor does not exists!", []);
+
                 var supervisor = await _userRepository.GetByIdAsync(supervisorId);
 
                 if (supervisor != null)
                 {
-                    if (!user.Supervisors.Any(x => x.SupervisorId == supervisorId))
-                        throw new BadRequestException("Supervisor does not exists!", []);
-
                     await _userRepository.DeleteSupervisorAsync(id, supervisorId);
                     return UserViewModel.FromEntity(user);
                 }

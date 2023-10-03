@@ -33,18 +33,18 @@ namespace ExpensesReport.Users.API.Controllers
         }
 
         /// <summary>
-        /// Get a user by email
+        /// Get a user by identity id
         /// </summary>
-        /// <param name="email">User email</param>
+        /// <param name="id">Identity identifier</param>
         /// <returns>User data</returns>
         /// <response code="200">Success</response>
         /// <response code="404">Not found</response>
-        [HttpGet("email/{email}")]
+        [HttpGet("identity/{id}")]
         [ProducesResponseType(typeof(UserViewModel), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
-        public async Task<IActionResult> GetUserByEmail(string email)
+        public async Task<IActionResult> GetUserByIdentityId(Guid id)
         {
-            var user = await _userServices.GetUserByEmail(email);
+            var user = await _userServices.GetUserByIdentityId(id);
             return Ok(user);
         }
 
@@ -94,22 +94,6 @@ namespace ExpensesReport.Users.API.Controllers
         {
             var user = await _userServices.UpdateUser(id, inputModel);
             return Ok(user);
-        }
-
-        /// <summary>
-        /// Delete a user
-        /// </summary>
-        /// <param name="id">User identifier</param>
-        /// <returns></returns>
-        /// <response code="204">Success</response>
-        /// <response code="404">Not found</response>
-        [HttpDelete("{id}")]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(typeof(ProblemDetails), 404)]
-        public async Task<IActionResult> DeleteUser(Guid id)
-        {
-            await _userServices.DeleteUser(id);
-            return NoContent();
         }
 
         /// <summary>
