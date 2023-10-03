@@ -7,7 +7,7 @@ namespace ExpensesReport.Identity.Application.ViewModels
     {
         public Guid Id { get; set; } = id;
         public string Email { get; set; } = email;
-        public UserIdentityRole Role { get; set; } = role;
+        public string RoleName { get; set; } = UserIdentityRoleExtensions.ToFriendlyString(role);
 
         public static IdentityViewModel FromEntity(UserIdentity identity, UserIdentityRole identityRole)
         {

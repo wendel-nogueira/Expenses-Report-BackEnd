@@ -1,20 +1,23 @@
 ﻿using ExpensesReport.Identity.Application.Exceptions;
 using ExpensesReport.Identity.Application.InputModels;
+using ExpensesReport.Identity.Application.Publishers;
 using ExpensesReport.Identity.Application.Validators;
 using ExpensesReport.Identity.Application.ViewModels;
 using ExpensesReport.Identity.Core.Constants;
 using ExpensesReport.Identity.Core.Enums;
 using ExpensesReport.Identity.Core.repositories;
 using ExpensesReport.Identity.Infrastructure.Authentication;
+using ExpensesReport.Identity.Infrastructure.Queue;
 using Microsoft.Extensions.Configuration;
 using System.Data;
 
 namespace ExpensesReport.Identity.Application.Services
 {
-    public class IdentityServices(IUserIdentityRepository userIdentityRepository, IConfiguration config) : IIdentityServices
+    public class IdentityServices(IUserIdentityRepository userIdentityRepository, IConfiguration config, MailQueue mailQueue) : IIdentityServices
     {
         private readonly IUserIdentityRepository _userIdentityRepository = userIdentityRepository;
         private readonly IConfiguration _config = config;
+        private readonly MailQueue _mailQueue = mailQueue;
 
         public async Task<IdentityViewModel> GetIdentityById(Guid id)
         {
@@ -94,23 +97,29 @@ namespace ExpensesReport.Identity.Application.Services
                 throw new BadRequestException("Error on login!", errorsInput);
 
             var identity = await _userIdentityRepository.GetByEmailAsync(inputModel.Email!) ?? throw new BadRequestException("Email or password invalid!", []);
+            var role = await _userIdentityRepository.GetRoleByIdentityIdAsync(identity.Id);
 
-            if (!identity.EmailConfirmed)
-                throw new BadRequestException("Error on login!", new[] { "Email not confirmed!" });
+            if (identity.IsDeleted)
+                throw new BadRequestException("Email or password invalid!", []);
 
-            if (identity.PasswordHash == null)
-                throw new BadRequestException("Error on login!", new[] { "Password not created" });
+            if (identity.PasswordHash == null || identity.PasswordHash == string.Empty)
+            {
+                var subscriber = new MailPublisher(_mailQueue);
+                var tokenCreatePassword = AuthServices.GenerateToken(identity, role!.Name!, _config);
+
+                subscriber.SendAddPasswordMail(identity.Id, identity.Email!, tokenCreatePassword);
+
+                throw new BadRequestException("Error on login!", new[] { "Password not created, check your email to create a password!" });
+            }
 
             var passwordValid = BCrypt.Net.BCrypt.Verify(inputModel.Password!, identity.PasswordHash!);
 
             if (!passwordValid)
                 throw new BadRequestException("Email or password invalid!", []);
 
-            var role = await _userIdentityRepository.GetRoleByIdentityIdAsync(identity.Id);
-
             var token = AuthServices.GenerateToken(identity, role!.Name!, _config);
 
-            return AuthenticationViewModel.FromEntity(identity, token, role.Name!);
+            return AuthenticationViewModel.FromEntity(token);
         }
 
         public async Task<IdentityViewModel> AddIdentity(AddIdentityInputModel inputModel)
@@ -145,7 +154,10 @@ namespace ExpensesReport.Identity.Application.Services
 
             var roleResult = UserIdentityRoleExtensions.ToEnum(role.Name!);
 
-            var token = HashServices.Encrypt(identity.Id, _config);
+            var subscriber = new MailPublisher(_mailQueue);
+            var token = AuthServices.GenerateToken(identity, role!.Name!, _config);
+
+            subscriber.SendAddPasswordMail(identity.Id, identity.Email!, token);
 
             return IdentityViewModel.FromEntity(identity, roleResult);
         }
@@ -157,23 +169,19 @@ namespace ExpensesReport.Identity.Application.Services
             if (errorsInput?.Length > 0)
                 throw new BadRequestException("Error on update identity password!", errorsInput);
 
-            var identityId = HashServices.Decrypt(token, _config);
-            var identity = await _userIdentityRepository.GetByIdAsync(identityId) ?? throw new NotFoundException("Identity not found!");
+            if (token == null || token == string.Empty)
+                throw new BadRequestException("Token invalid!", []);
+
+            var identityId = AuthServices.DecodeToken(token)[0].Value;
+            var identity = await _userIdentityRepository.GetByIdAsync(identityId) ?? throw new NotFoundException("Token invalid!");
+
+            if (identity.PasswordHash != null && identity.PasswordHash != string.Empty)
+                throw new BadRequestException("Token invalid!", []);
 
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(inputModel.NewPassword!);
 
-            identity.PasswordHash = passwordHash;
-
-            await _userIdentityRepository.UpdateIdentityAsync(identity);
-        }
-
-        public async Task ConfirmIdentityEmail(string token)
-        {
-            var identityId = HashServices.Decrypt(token, _config);
-
-            var identity = await _userIdentityRepository.GetByIdAsync(identityId) ?? throw new NotFoundException("Identity not found!");
-
             identity.EmailConfirmed = true;
+            identity.PasswordHash = passwordHash;
 
             await _userIdentityRepository.UpdateIdentityAsync(identity);
         }

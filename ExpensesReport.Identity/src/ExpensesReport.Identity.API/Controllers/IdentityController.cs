@@ -24,7 +24,7 @@ namespace ExpensesReport.Identity.API.Controllers
         /// <returns>Identity data</returns>
         /// <response code="200">Success</response>
         /// <response code="404">Not found</response>
-        [Authorize]
+        //[Authorize]
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(IdentityViewModel), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
@@ -76,7 +76,7 @@ namespace ExpensesReport.Identity.API.Controllers
         /// </summary>
         /// <returns>Identity collection</returns>
         /// <response code="200">Success</response>
-        [Authorize]
+        //[Authorize]
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<IdentityViewModel>), 200)]
         public async Task<IActionResult> GetAllIdentities()
@@ -106,7 +106,7 @@ namespace ExpensesReport.Identity.API.Controllers
         /// </summary>
         /// <returns>Role collection</returns>
         /// <response code="200">Success</response>
-        [Authorize]
+        //[Authorize]
         [HttpGet("roles/all")]
         [ProducesResponseType(typeof(IEnumerable<RoleViewModel>), 200)]
         public async Task<IActionResult> GetAllRoles()
@@ -142,7 +142,7 @@ namespace ExpensesReport.Identity.API.Controllers
         /// <returns>Newly created identity</returns>
         /// <response code="201">Created</response>
         /// <response code="400">Bad request</response>
-        [Authorize]
+        //[Authorize]
         [HttpPost]
         [ProducesResponseType(typeof(IdentityViewModel), 201)]
         [ProducesResponseType(typeof(ProblemDetails), 400)]
@@ -163,30 +163,13 @@ namespace ExpensesReport.Identity.API.Controllers
         /// <response code="204">Success</response>
         /// <response code="400">Bad request</response>
         /// <response code="404">Not found</response>
-        [HttpPost("password/{token}")]
+        [HttpPost("password")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ProblemDetails), 400)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
-        public async Task<IActionResult> AddIdentityPassword(string token, [FromBody] ChangePasswordInputModel inputModel)
+        public async Task<IActionResult> AddIdentityPassword([FromQuery] string token, [FromBody] ChangePasswordInputModel inputModel)
         {
             await _identityServices.AddIdentityPassword(token, inputModel);
-
-            return NoContent();
-        }
-
-        /// <summary>
-        /// Confirm a identity email
-        /// </summary>
-        /// <param name="token">Token to confirm identity email</param>
-        /// <returns></returns>
-        /// <response code="204">Success</response>
-        /// <response code="400">Bad request</response>
-        [HttpPost("email/{token}")]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(typeof(ProblemDetails), 400)]
-        public async Task<IActionResult> ConfirmIdentityEmail(string token)
-        {
-            await _identityServices.ConfirmIdentityEmail(token);
 
             return NoContent();
         }

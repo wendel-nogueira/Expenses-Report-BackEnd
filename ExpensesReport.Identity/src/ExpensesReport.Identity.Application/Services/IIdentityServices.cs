@@ -14,7 +14,6 @@ namespace ExpensesReport.Identity.Application.Services
         Task<AuthenticationViewModel> Login(LoginInputModel inputModel);
         Task<IdentityViewModel> AddIdentity(AddIdentityInputModel inputModel);
         Task AddIdentityPassword(string token, ChangePasswordInputModel inputModel);
-        Task ConfirmIdentityEmail(string token);
         Task UpdateIdentityPassword(Guid id, ChangePasswordInputModel inputModel);
         Task UpdateIdentityEmail(Guid id, ChangeEmailInputModel inputModel);
         Task UpdateIdentityRole(Guid id, ChangeIdentityRoleInputModel inputModel);

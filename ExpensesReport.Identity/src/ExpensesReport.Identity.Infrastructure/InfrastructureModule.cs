@@ -1,16 +1,15 @@
-﻿using ExpensesReport.Identity.Core.Entities;
+﻿using Azure.Messaging.ServiceBus;
+using ExpensesReport.Identity.Core.Entities;
 using ExpensesReport.Identity.Core.repositories;
 using ExpensesReport.Identity.Infrastructure.Persistence.Context;
 using ExpensesReport.Identity.Infrastructure.Persistence.Repositories;
+using ExpensesReport.Identity.Infrastructure.Queue;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using System;
 using System.Text;
 
 namespace ExpensesReport.Identity.Infrastructure
@@ -22,7 +21,8 @@ namespace ExpensesReport.Identity.Infrastructure
             services
                 .AddPersistence()
                 .AddRepositories()
-                .AddIdentity();
+                .AddIdentity()
+                .AddQueue();
 
             return services;
         }
@@ -80,5 +80,23 @@ namespace ExpensesReport.Identity.Infrastructure
 
             return services;
         }
+
+        private static IServiceCollection AddQueue(this IServiceCollection services)
+        {
+            var serviceBusConnectionString = "Endpoint=sb://expensesrepotort.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=T1iYaDPoboFthwg188t/hy/5EVRn72r+8+ASbCAK9Gc=";
+
+            //Environment.GetEnvironmentVariable("ServiceBusConnectionString");
+
+            services.AddSingleton(serviceProvider =>
+            {
+                return new ServiceBusClient(serviceBusConnectionString);
+            });
+
+            services.AddScoped<MailQueue>();
+
+            return services;
+        }
     }
 }
+
+
