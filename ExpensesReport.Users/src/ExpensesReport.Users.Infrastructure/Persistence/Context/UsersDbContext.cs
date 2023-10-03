@@ -30,25 +30,6 @@ namespace ExpensesReport.Users.Infrastructure.Persistence
                         .HasColumnType("varchar(50)");
                 });
 
-                entity.Property(user => user.Role)
-                    .HasColumnName("Role")
-                    .IsRequired()
-                    .HasConversion<string>();
-
-                entity.Property(user => user.Email)
-                    .HasColumnName("Email")
-                    .IsRequired()
-                    .HasAnnotation("MaxLength", 100)
-                    .HasColumnType("varchar(100)");
-
-                entity.HasIndex(user => user.Email).IsUnique();
-
-                entity.Property(user => user.Password)
-                    .HasColumnName("Password")
-                    .IsRequired()
-                    .HasAnnotation("MaxLength", 100)
-                    .HasColumnType("varchar(100)");
-
                 entity.OwnsOne(user => user.Address, addressUser =>
                 {
                     addressUser.Property(address => address.Address)
@@ -81,10 +62,6 @@ namespace ExpensesReport.Users.Infrastructure.Persistence
                         .HasAnnotation("MaxLength", 50)
                         .HasColumnType("varchar(50)");
                 });
-
-                entity.Property(user => user.IsDeleted)
-                    .HasColumnName("IsDeleted")
-                    .IsRequired();
 
                 entity.Property(user => user.CreatedAt)
                     .HasColumnName("CreatedAt")

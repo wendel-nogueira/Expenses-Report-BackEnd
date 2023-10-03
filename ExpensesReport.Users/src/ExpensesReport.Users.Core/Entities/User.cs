@@ -1,6 +1,4 @@
-﻿using ExpensesReport.Users.Core.Enums;
-using ExpensesReport.Users.Core.ValueObjects;
-using System.ComponentModel.DataAnnotations;
+﻿using ExpensesReport.Users.Core.ValueObjects;
 
 namespace ExpensesReport.Users.Core.Entities
 {
@@ -9,38 +7,23 @@ namespace ExpensesReport.Users.Core.Entities
         [Obsolete("Parameterless constructor should not be used directly.")]
         private User() { }
 
-        public User(UserName name, UserRole role, string email, UserAddress userAddress)
+        public User(Guid identityId, UserName name, UserAddress userAddress)
         {
+            IdentityId = identityId;
             Name = name;
-            Role = role;
-            Email = email;
-            Password = GeneratePassword();
             Address = userAddress;
 
-            IsDeleted = false;
             CreatedAt = DateTime.Now;
             UpdatedAt = DateTime.Now;
-            Supervisors = new List<UserSupervisor>();
 
-            Validate();
+            Supervisors = new List<UserSupervisor>();
         }
+
+        public Guid IdentityId { get; set; }
 
         public UserName Name { get; set; }
 
-        [Required(ErrorMessage = "Role is required")]
-        [EnumDataType(typeof(UserRole), ErrorMessage = "Role must be a valid value")]
-        public UserRole Role { get; set; }
-
-        [Required(ErrorMessage = "Email is required")]
-        [EmailAddress(ErrorMessage = "Email must be a valid email")]
-        [StringLength(100, ErrorMessage = "Email must be between 2 and 100 characters", MinimumLength = 2)]
-        public string Email { get; set; }
-
-        public string Password { get; set; }
-
         public UserAddress Address { get; set; }
-
-        public bool IsDeleted { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
@@ -48,57 +31,26 @@ namespace ExpensesReport.Users.Core.Entities
 
         public virtual ICollection<UserSupervisor> Supervisors { get; set; }
 
-        public void Delete()
+        public void Update(UserName name, UserAddress address)
         {
-            IsDeleted = true;
+            Name = name;
+            Address = address;
             UpdatedAt = DateTime.Now;
         }
 
-        public void Update(User user)
+        public void AddSupervisorToUser(User supervisor)
         {
-            Name = user.Name;
-            Role = user.Role;
-            Email = user.Email;
-            Address = user.Address;
-            UpdatedAt = DateTime.Now;
-        }
-
-        public void AddSupervisorToUser(Guid supervisorId)
-        {
-            var userSupervisor = new UserSupervisor(Id, supervisorId);
+            var userSupervisor = new UserSupervisor(Id, supervisor.Id, this, supervisor);
 
             Supervisors.Add(userSupervisor);
         }
 
-        public void RemoveSupervisorFromUser(Guid supervisorId)
+        public void RemoveSupervisorFromUser(User supervisor)
         {
-            var userSupervisor = Supervisors.FirstOrDefault(x => x.SupervisorId == supervisorId);
+            var userSupervisor = Supervisors.SingleOrDefault(x => x.SupervisorId == supervisor.Id);
 
             if (userSupervisor != null)
                 Supervisors.Remove(userSupervisor);
-        }
-
-        public static string GeneratePassword()
-        {
-            string _allowedChars = "abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNOPQRSTUVWXYZ0123456789!@$?_-";
-            Random randNum = new();
-            char[] chars = new char[8];
-
-            for (int i = 0; i < 8; i++)
-            {
-                chars[i] = _allowedChars[(int)((_allowedChars.Length) * randNum.NextDouble())];
-            }
-
-            return new string(chars);
-        }
-
-        public void Validate()
-        {
-            var context = new ValidationContext(this, serviceProvider: null, items: null);
-            var results = new List<ValidationResult>();
-
-            if (!Validator.TryValidateObject(this, context, results, true))
-                throw new Exception(string.Join(" | ", results.Select(x => x.ErrorMessage)));
         }
     }
 }
