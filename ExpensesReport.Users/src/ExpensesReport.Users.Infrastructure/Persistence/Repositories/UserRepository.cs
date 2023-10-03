@@ -1,5 +1,6 @@
 ﻿using ExpensesReport.Users.Core.Entities;
 using ExpensesReport.Users.Core.Repositories;
+using ExpensesReport.Users.Core.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
 namespace ExpensesReport.Users.Infrastructure.Persistence.Repositories
@@ -20,9 +21,9 @@ namespace ExpensesReport.Users.Infrastructure.Persistence.Repositories
             return user;
         }
 
-        public async Task<User?> GetByEmailAsync(string email)
+        public async Task<User?> GetByIdentityIdAsync(Guid id)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(x => x.Email == email);
+            var user = await _context.Users.SingleOrDefaultAsync(x => x.IdentityId == id);
 
             return user;
         }
@@ -40,35 +41,32 @@ namespace ExpensesReport.Users.Infrastructure.Persistence.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(Guid id, User userUpdate)
+        public async Task UpdateAsync(Guid id, UserName name, UserAddress address)
         {
             var user = await _context.Users.SingleOrDefaultAsync(x => x.Id == id);
 
             if (user == null)
                 return;
 
-            user.Update(userUpdate);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task DeleteAsync(Guid id)
-        {
-            var user = await _context.Users.SingleOrDefaultAsync(x => x.Id == id);
-
-            if (user == null)
-                return;
-
-            user.Delete();
+            user.Update(name, address);
             await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<User>> GetUserSupervisorsByIdAsync(Guid id)
         {
-            var supervisors = await _context.Users
-                .Include(x => x.Supervisors)
-                .ThenInclude(x => x.Supervisor)
-                .Where(x => x.Supervisors.Any(x => x.UserId == id))
-                .ToListAsync();
+            IEnumerable<User> supervisors = new List<User>();
+
+            var user = await _context.Users.Include(x => x.Supervisors).SingleOrDefaultAsync(x => x.Id == id);
+
+            if (user == null || user.Supervisors == null || user.Supervisors.Count == 0)
+                return supervisors;
+
+            var supervisorsIds = user.Supervisors.Select(x => x.SupervisorId).ToList();
+
+            if (supervisorsIds.Count == 0)
+                return supervisors;
+
+            supervisors = await _context.Users.Where(x => supervisorsIds.Contains(x.Id)).ToListAsync();
 
             return supervisors;
         }
@@ -80,7 +78,12 @@ namespace ExpensesReport.Users.Infrastructure.Persistence.Repositories
             if (user == null)
                 return;
 
-            user.AddSupervisorToUser(supervisorId);
+            var supervisor = await _context.Users.SingleOrDefaultAsync(x => x.Id == supervisorId);
+
+            if (supervisor == null)
+                return;
+
+            user.AddSupervisorToUser(supervisor);
             await _context.SaveChangesAsync();
         }
 
@@ -91,7 +94,12 @@ namespace ExpensesReport.Users.Infrastructure.Persistence.Repositories
             if (user == null)
                 return;
 
-            user.RemoveSupervisorFromUser(supervisorId);
+            var supervisor = await _context.Users.SingleOrDefaultAsync(x => x.Id == supervisorId);
+
+            if (supervisor == null)
+                return;
+
+            user.RemoveSupervisorFromUser(supervisor);
             await _context.SaveChangesAsync();
         }
     }

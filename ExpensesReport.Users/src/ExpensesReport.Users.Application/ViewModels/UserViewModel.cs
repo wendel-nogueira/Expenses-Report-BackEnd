@@ -1,33 +1,22 @@
 ﻿using ExpensesReport.Users.Core.Entities;
-using ExpensesReport.Users.Core.Enums;
 
 namespace ExpensesReport.Users.Application.ViewModels
 {
-    public class UserViewModel
+    public class UserViewModel(Guid id, Guid identityId, UserNameViewModel name, UserAddressViewModel address, DateTime createdAt, DateTime updatedAt)
     {
-        public UserViewModel(Guid id, UserNameViewModel name, UserRole role, string email, UserAddressViewModel address, DateTime createdAt)
-        {
-            Id = id;
-            Name = name;
-            Role = role;
-            Email = email;
-            Address = address;
-            CreatedAt = createdAt;
-        }
-
-        public Guid Id { get; private set; }
-        public UserNameViewModel Name { get; private set; }
-        public UserRole Role { get; private set; }
-        public string Email { get; private set; }
-        public UserAddressViewModel Address { get; private set; }
-        public DateTime CreatedAt { get; private set; }
+        public Guid Id { get; private set; } = id;
+        public Guid IdentityId { get; private set; } = identityId;
+        public UserNameViewModel Name { get; private set; } = name;
+        public UserAddressViewModel Address { get; private set; } = address;
+        public DateTime CreatedAt { get; private set; } = createdAt;
+        public DateTime UpdatedAt { get; private set; } = updatedAt;
 
         public static UserViewModel FromEntity(User user)
         {
             var name = new UserNameViewModel(user.Name.FirstName, user.Name.LastName);
             var address = new UserAddressViewModel(user.Address.Address, user.Address.City, user.Address.State, user.Address.Zip, user.Address.Country);
 
-            return new UserViewModel(user.Id, name, user.Role, user.Email, address, user.CreatedAt);
+            return new UserViewModel(user.Id, user.IdentityId, name, address, user.CreatedAt, user.UpdatedAt);
         }
     }
 }

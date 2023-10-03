@@ -5,13 +5,13 @@
         [Obsolete("Parameterless constructor should not be used directly.")]
         private UserSupervisor() { }
 
-        public UserSupervisor(Guid userId, Guid supervisorId)
+        public UserSupervisor(Guid userId, Guid supervisorId, User user, User supervisor)
         {
             UserId = userId;
             SupervisorId = supervisorId;
 
-            User = null!;
-            Supervisor = null!;
+            User = user;
+            Supervisor = supervisor;
         }
 
         public Guid UserId { get; set; }
