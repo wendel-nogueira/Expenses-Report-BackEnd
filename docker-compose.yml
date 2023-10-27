@@ -66,6 +66,22 @@ services:
     networks:
       - expenses-report-network
 
+  departament-database:
+    container_name: departament-database
+    image: mysql:5.7
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${DEPARTAMENT_DATABASE}
+      MYSQL_USER: ${DEPARTAMENT_DATABASE_USER}
+      MYSQL_PASSWORD: ${DEPARTAMENT_DATABASE_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DEPARTAMENT_DATABASE_ROOT_PASSWORD}
+    ports:
+      - ${DEPARTAMENT_DATABASE_PORT}:3306
+    volumes:
+      - ./mysql/${DEPARTAMENT_DATABASE_VOLUME}:/var/lib/mysql
+    networks:
+      - expenses-report-network
+
   mail-microservice:
     container_name: mail-microservice
     image: mailmicroservice
