@@ -12,11 +12,12 @@ namespace ExpensesReport.Identity.Application.Services
         Task<IEnumerable<IdentityViewModel>> GetAllByRole(string role);
         Task<IEnumerable<RoleViewModel>> GetAllRoles();
         Task<AuthenticationViewModel> Login(LoginInputModel inputModel);
+        Task SendResetPasswordEmail(ResetPasswordInputModel inputModel);
         Task<IdentityViewModel> AddIdentity(AddIdentityInputModel inputModel);
-        Task AddIdentityPassword(string token, ChangePasswordInputModel inputModel);
-        Task UpdateIdentityPassword(Guid id, ChangePasswordInputModel inputModel);
+        Task UpdateIdentityPassword(string passwordToken, ChangePasswordInputModel inputModel);
         Task UpdateIdentityEmail(Guid id, ChangeEmailInputModel inputModel);
         Task UpdateIdentityRole(Guid id, ChangeIdentityRoleInputModel inputModel);
+        Task ActivateIdentity(Guid id);
         Task DeleteIdentity(Guid id);
     }
 }

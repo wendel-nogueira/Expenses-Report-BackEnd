@@ -1,9 +1,11 @@
 ﻿using ExpensesReport.Identity.Core.Constants;
 using ExpensesReport.Identity.Core.Entities;
+using ExpensesReport.Identity.Infrastructure.Authentication;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace ExpensesReport.Identity.Application.Services
@@ -50,6 +52,17 @@ namespace ExpensesReport.Identity.Application.Services
             var jsonToken = handler.ReadToken(token) as JwtSecurityToken;
 
             return jsonToken!.Claims.ToList();
+        }
+
+        public static string GenerateRandomToken()
+        {
+            var randomNumber = new byte[32];
+            using var rng = RandomNumberGenerator.Create();
+            rng.GetBytes(randomNumber);
+
+            var token = Convert.ToBase64String(randomNumber);
+
+            return HashServices.Encrypt(token);
         }
     }
 }

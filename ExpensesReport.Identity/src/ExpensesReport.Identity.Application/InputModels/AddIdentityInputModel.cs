@@ -2,8 +2,6 @@
 using ExpensesReport.Identity.Core.Enums;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
-using System.Net;
-using System.Xml.Linq;
 
 namespace ExpensesReport.Identity.Application.InputModels
 {
