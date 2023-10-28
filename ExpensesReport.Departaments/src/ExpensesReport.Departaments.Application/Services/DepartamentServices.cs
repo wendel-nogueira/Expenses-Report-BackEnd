@@ -3,7 +3,6 @@ using ExpensesReport.Departaments.Application.ViewModels;
 using ExpensesReport.Departaments.Core.Repositories;
 using ExpensesReport.Users.Application.Exceptions;
 using ExpensesReport.Users.Application.Validators;
-using Microsoft.VisualBasic;
 
 namespace ExpensesReport.Departaments.Application.Services
 {
