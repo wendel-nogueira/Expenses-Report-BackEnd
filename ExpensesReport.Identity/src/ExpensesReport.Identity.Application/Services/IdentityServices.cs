@@ -89,6 +89,7 @@ namespace ExpensesReport.Identity.Application.Services
 
             return rolesViewModel;
         }
+
         public async Task<AuthenticationViewModel> Login(LoginInputModel inputModel)
         {
             var errorsInput = InputModelValidator.Validate(inputModel);
@@ -104,10 +105,9 @@ namespace ExpensesReport.Identity.Application.Services
 
             if (identity.PasswordHash == null || identity.PasswordHash == string.Empty)
             {
-                var subscriber = new MailPublisher(_mailQueue);
-                var tokenCreatePassword = AuthServices.GenerateToken(identity, role!.Name!, _config);
+                var resetPassword = new ResetPasswordInputModel { Email = identity.Email! };
 
-                subscriber.SendAddPasswordMail(identity.Id, identity.Email!, tokenCreatePassword);
+                await SendResetPasswordEmail(resetPassword);
 
                 throw new BadRequestException("Error on login!", new[] { "Password not created, check your email to create a password!" });
             }
@@ -120,6 +120,28 @@ namespace ExpensesReport.Identity.Application.Services
             var token = AuthServices.GenerateToken(identity, role!.Name!, _config);
 
             return AuthenticationViewModel.FromEntity(token);
+        }
+
+        public async Task SendResetPasswordEmail(ResetPasswordInputModel inputModel)
+        {
+            var errorsInput = InputModelValidator.Validate(inputModel);
+
+            if (errorsInput?.Length > 0)
+                throw new BadRequestException("Error on login!", errorsInput);
+
+            var email = inputModel.Email!;
+
+            var identity = await _userIdentityRepository.GetByEmailAsync(email) ?? throw new NotFoundException("Identity not found!");
+
+            var publisher = new MailPublisher(_mailQueue);
+
+            var token = AuthServices.GenerateRandomToken();
+
+            identity.ResetPasswordToken = token;
+
+            await _userIdentityRepository.UpdateIdentityAsync(identity);
+
+            publisher.SendResetPasswordMail(identity);
         }
 
         public async Task<IdentityViewModel> AddIdentity(AddIdentityInputModel inputModel)
@@ -154,49 +176,26 @@ namespace ExpensesReport.Identity.Application.Services
 
             var roleResult = UserIdentityRoleExtensions.ToEnum(role.Name!);
 
-            var subscriber = new MailPublisher(_mailQueue);
-            var token = AuthServices.GenerateToken(identity, role!.Name!, _config);
+            var resetPassword = new ResetPasswordInputModel { Email = identity.Email! };
 
-            subscriber.SendAddPasswordMail(identity.Id, identity.Email!, token);
+            await SendResetPasswordEmail(resetPassword);
 
             return IdentityViewModel.FromEntity(identity, roleResult);
         }
 
-        public async Task AddIdentityPassword(string token, ChangePasswordInputModel inputModel)
+        public async Task UpdateIdentityPassword(string passwordToken, ChangePasswordInputModel inputModel)
         {
             var errorsInput = InputModelValidator.Validate(inputModel);
 
             if (errorsInput?.Length > 0)
                 throw new BadRequestException("Error on update identity password!", errorsInput);
 
-            if (token == null || token == string.Empty)
-                throw new BadRequestException("Token invalid!", []);
-
-            var identityId = AuthServices.DecodeToken(token)[0].Value;
-            var identity = await _userIdentityRepository.GetByIdAsync(identityId) ?? throw new NotFoundException("Token invalid!");
-
-            if (identity.PasswordHash != null && identity.PasswordHash != string.Empty)
-                throw new BadRequestException("Token invalid!", []);
+            var identity = await _userIdentityRepository.GetByResetPasswordTokenAsync(passwordToken) ?? throw new NotFoundException("Identity not found!");
 
             var passwordHash = BCrypt.Net.BCrypt.HashPassword(inputModel.NewPassword!);
 
-            identity.EmailConfirmed = true;
             identity.PasswordHash = passwordHash;
-
-            await _userIdentityRepository.UpdateIdentityAsync(identity);
-        }
-
-        public async Task UpdateIdentityPassword(Guid id, ChangePasswordInputModel inputModel)
-        {
-            var errorsInput = InputModelValidator.Validate(inputModel);
-
-            if (errorsInput?.Length > 0)
-                throw new BadRequestException("Error on update identity password!", errorsInput);
-
-            var identity = await _userIdentityRepository.GetByIdAsync(id.ToString()) ?? throw new NotFoundException("Identity not found!");
-
-            var passwordHash = BCrypt.Net.BCrypt.HashPassword(inputModel.NewPassword!);
-            identity.PasswordHash = passwordHash;
+            identity.ResetPasswordToken = null;
 
             await _userIdentityRepository.UpdateIdentityAsync(identity);
         }
@@ -230,6 +229,15 @@ namespace ExpensesReport.Identity.Application.Services
             var newRole = inputModel.Role!;
 
             await _userIdentityRepository.UpdateIdentityRoleAsync(identity, newRole);
+        }
+
+        public async Task ActivateIdentity(Guid id)
+        {
+            var identity = await _userIdentityRepository.GetByIdAsync(id.ToString()) ?? throw new NotFoundException("Identity not found!");
+
+            identity.Activate();
+
+            await _userIdentityRepository.UpdateIdentityAsync(identity);
         }
 
         public async Task DeleteIdentity(Guid id)

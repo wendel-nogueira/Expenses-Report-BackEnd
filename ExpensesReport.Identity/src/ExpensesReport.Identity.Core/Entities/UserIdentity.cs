@@ -8,15 +8,23 @@ namespace ExpensesReport.Identity.Core.Entities
         {
             Id = Guid.NewGuid().ToString();
             PasswordHash = null;
+            ResetPasswordToken = null;
 
             IsDeleted = false;
             CreatedAt = DateTime.Now;
             UpdatedAt = DateTime.Now;
         }
 
+        public string? ResetPasswordToken { get; set; }
         public bool IsDeleted { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
+
+        public void Activate()
+        {
+            IsDeleted = false;
+            UpdatedAt = DateTime.Now;
+        }
 
         public void Delete()
         {
