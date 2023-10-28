@@ -1,6 +1,6 @@
 ﻿using ExpensesReport.Identity.Core.Entities;
 using ExpensesReport.Identity.Core.Enums;
-using ExpensesReport.Identity.Core.repositories;
+using ExpensesReport.Identity.Core.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

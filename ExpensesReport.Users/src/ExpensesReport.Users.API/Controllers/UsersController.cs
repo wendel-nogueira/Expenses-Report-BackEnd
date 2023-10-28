@@ -1,6 +1,7 @@
 ﻿using ExpensesReport.Users.Application.InputModels;
 using ExpensesReport.Users.Application.Services;
 using ExpensesReport.Users.Application.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExpensesReport.Users.API.Controllers
@@ -23,6 +24,7 @@ namespace ExpensesReport.Users.API.Controllers
         /// <returns>User data</returns>
         /// <response code="200">Success</response>
         /// <response code="404">Not found</response>
+        [Authorize]
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(UserViewModel), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
@@ -39,6 +41,7 @@ namespace ExpensesReport.Users.API.Controllers
         /// <returns>User data</returns>
         /// <response code="200">Success</response>
         /// <response code="404">Not found</response>
+        [Authorize]
         [HttpGet("identity/{id}")]
         [ProducesResponseType(typeof(UserViewModel), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
@@ -53,6 +56,7 @@ namespace ExpensesReport.Users.API.Controllers
         /// </summary>
         /// <returns>User collection</returns>
         /// <response code="200">Success</response>
+        [Authorize]
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<UserViewModel>), 200)]
         public async Task<IActionResult> GetUsers()
@@ -68,6 +72,7 @@ namespace ExpensesReport.Users.API.Controllers
         /// <returns>Newly created user</returns>
         /// <response code="201">Created</response>
         /// <response code="400">Bad request</response>
+        [Authorize]
         [HttpPost]
         [ProducesResponseType(typeof(UserViewModel), 201)]
         [ProducesResponseType(typeof(ProblemDetails), 400)]
@@ -86,6 +91,7 @@ namespace ExpensesReport.Users.API.Controllers
         /// <response code="200">Success</response>
         /// <response code="400">Bad request</response>
         /// <response code="404">Not found</response>
+        [Authorize]
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(UserViewModel), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 400)]
@@ -104,6 +110,7 @@ namespace ExpensesReport.Users.API.Controllers
         /// <returns></returns>
         /// <response code="204">Success</response>
         /// <response code="404">Not found</response>
+        [Authorize]
         [HttpPost("{id}/supervisors/{supervisorId}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
@@ -121,6 +128,7 @@ namespace ExpensesReport.Users.API.Controllers
         /// <returns></returns>
         /// <response code="204">Success</response>
         /// <response code="404">Not found</response>
+        [Authorize]
         [HttpDelete("{id}/supervisors/{supervisorId}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
@@ -137,6 +145,7 @@ namespace ExpensesReport.Users.API.Controllers
         /// <returns></returns>
         /// <response code="204">Success</response>
         /// <response code="404">Not found</response>
+        [Authorize]
         [HttpGet("{id}/supervisors")]
         [ProducesResponseType(typeof(IEnumerable<UserViewModel>), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
