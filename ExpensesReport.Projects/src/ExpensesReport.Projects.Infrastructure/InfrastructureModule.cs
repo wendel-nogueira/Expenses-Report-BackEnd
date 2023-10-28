@@ -1,9 +1,12 @@
 ﻿using ExpensesReport.Projects.Core.Repositories;
 using ExpensesReport.Projects.Infrastructure.Persistence.Context;
 using ExpensesReport.Projects.Infrastructure.Persistence.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace ExpensesReport.Projects.Infrastructure
 {
@@ -13,7 +16,8 @@ namespace ExpensesReport.Projects.Infrastructure
         {
             services
                 .AddPersistence()
-                .AddRepositories();
+                .AddRepositories()
+                .AddAuthentication();
 
             return services;
         }
@@ -33,6 +37,31 @@ namespace ExpensesReport.Projects.Infrastructure
         public static IServiceCollection AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<IProjectRepository, ProjectRepository>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddAuthentication(this IServiceCollection services)
+        {
+            services.AddAuthentication(auth =>
+            {
+                auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(options =>
+            {
+                var configuration = services.BuildServiceProvider().GetService<IConfiguration>();
+
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = configuration!.GetSection("Jwt:Issuer").Value,
+                    ValidateAudience = true,
+                    ValidAudience = configuration.GetSection("Jwt:Audience").Value,
+                    RequireExpirationTime = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection("Jwt:Key").Value!)),
+                    ValidateIssuerSigningKey = true
+                };
+            });
 
             return services;
         }

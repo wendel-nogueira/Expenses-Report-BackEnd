@@ -1,6 +1,7 @@
 ﻿using ExpensesReport.Projects.Application.InputModels;
 using ExpensesReport.Projects.Application.Services;
 using ExpensesReport.Projects.Application.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExpensesReport.Projects.API.Controllers
@@ -23,6 +24,7 @@ namespace ExpensesReport.Projects.API.Controllers
         /// <returns>Project data</returns>
         /// <response code="200">Success</response>
         /// <response code="404">Not found</response>
+        [Authorize]
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(ProjectViewModel), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
@@ -39,6 +41,7 @@ namespace ExpensesReport.Projects.API.Controllers
         /// <returns>Project data</returns>
         /// <response code="200">Success</response>
         /// <response code="404">Not found</response>
+        [Authorize]
         [HttpGet("code/{code}")]
         [ProducesResponseType(typeof(ProjectViewModel), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
@@ -53,6 +56,7 @@ namespace ExpensesReport.Projects.API.Controllers
         /// </summary>
         /// <returns>Project collection</returns>
         /// <response code="200">Success</response>
+        [Authorize]
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<ProjectViewModel>), 200)]
         public async Task<IActionResult> GetAllProjects()
@@ -68,6 +72,7 @@ namespace ExpensesReport.Projects.API.Controllers
         /// <returns>Newly created project</returns>
         /// <response code="201">Created</response>
         /// <response code="400">Bad request</response>
+        [Authorize]
         [HttpPost]
         [ProducesResponseType(typeof(ProjectViewModel), 201)]
         [ProducesResponseType(typeof(ProblemDetails), 400)]
@@ -86,6 +91,7 @@ namespace ExpensesReport.Projects.API.Controllers
         /// <response code="204">Success</response>
         /// <response code="400">Bad request</response>
         /// <response code="404">Not found</response>
+        [Authorize]
         [HttpPut("{id}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ProblemDetails), 400)]
@@ -103,6 +109,7 @@ namespace ExpensesReport.Projects.API.Controllers
         /// <returns></returns>
         /// <response code="204">Success</response>
         /// <response code="404">Not found</response>
+        [Authorize]
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
@@ -119,6 +126,7 @@ namespace ExpensesReport.Projects.API.Controllers
         /// <returns></returns>
         /// <response code="204">Success</response>
         /// <response code="404">Not found</response>
+        [Authorize]
         [HttpPatch("{id}/activate")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
@@ -135,6 +143,7 @@ namespace ExpensesReport.Projects.API.Controllers
         /// <returns>Project collection</returns>
         /// <response code="200">Success</response>
         /// <response code="404">Not found</response>
+        [Authorize]
         [HttpGet("departament/{departamentId}")]
         [ProducesResponseType(typeof(IEnumerable<ProjectViewModel>), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]

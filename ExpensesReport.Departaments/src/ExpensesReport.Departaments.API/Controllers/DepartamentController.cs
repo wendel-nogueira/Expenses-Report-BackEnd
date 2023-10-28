@@ -1,6 +1,7 @@
 ﻿using ExpensesReport.Departaments.Application.InputModels;
 using ExpensesReport.Departaments.Application.Services;
 using ExpensesReport.Departaments.Application.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ExpensesReport.Departaments.API.Controllers
@@ -23,6 +24,7 @@ namespace ExpensesReport.Departaments.API.Controllers
         /// <returns>Departament data</returns>
         /// <response code="200">Success</response>
         /// <response code="404">Not found</response>
+        [Authorize]
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(DepartamentViewModel), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
@@ -39,6 +41,7 @@ namespace ExpensesReport.Departaments.API.Controllers
         /// <returns>Departament data</returns>
         /// <response code="200">Success</response>
         /// <response code="404">Not found</response>
+        [Authorize]
         [HttpGet("name/{name}")]
         [ProducesResponseType(typeof(DepartamentViewModel), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
@@ -55,6 +58,7 @@ namespace ExpensesReport.Departaments.API.Controllers
         /// <returns>Departament data</returns>
         /// <response code="200">Success</response>
         /// <response code="404">Not found</response>
+        [Authorize]
         [HttpGet("acronym/{acronym}")]
         [ProducesResponseType(typeof(DepartamentViewModel), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
@@ -69,6 +73,7 @@ namespace ExpensesReport.Departaments.API.Controllers
         /// </summary>
         /// <returns>Departament collection</returns>
         /// <response code="200">Success</response>
+        [Authorize]
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<DepartamentViewModel>), 200)]
         public async Task<IActionResult> GetAllDepartaments()
@@ -84,6 +89,7 @@ namespace ExpensesReport.Departaments.API.Controllers
         /// <returns>Newly created departament</returns>
         /// <response code="201">Created</response>
         /// <response code="400">Bad request</response>
+        [Authorize]
         [HttpPost]
         [ProducesResponseType(typeof(DepartamentViewModel), 201)]
         [ProducesResponseType(typeof(ProblemDetails), 400)]
@@ -102,6 +108,7 @@ namespace ExpensesReport.Departaments.API.Controllers
         /// <response code="204">Success</response>
         /// <response code="400">Bad request</response>
         /// <response code="404">Not found</response>
+        [Authorize]
         [HttpPut("{id}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ProblemDetails), 400)]
@@ -119,6 +126,7 @@ namespace ExpensesReport.Departaments.API.Controllers
         /// <returns></returns>
         /// <response code="204">Success</response>
         /// <response code="404">Not found</response>
+        [Authorize]
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
@@ -135,6 +143,7 @@ namespace ExpensesReport.Departaments.API.Controllers
         /// <returns></returns>
         /// <response code="204">Success</response>
         /// <response code="404">Not found</response>
+        [Authorize]
         [HttpPatch("{id}/activate")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
@@ -151,6 +160,7 @@ namespace ExpensesReport.Departaments.API.Controllers
         /// <returns>Manager collection</returns>
         /// <response code="200">Success</response>
         /// <response code="404">Not found</response>
+        [Authorize]
         [HttpGet("{departamentId}/managers")]
         [ProducesResponseType(typeof(IEnumerable<ManagerViewModel>), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
@@ -169,6 +179,7 @@ namespace ExpensesReport.Departaments.API.Controllers
         /// <response code="204">Success</response>
         /// <response code="400">Bad request</response>
         /// <response code="404">Not found</response>
+        [Authorize]
         [HttpPost("{departamentId}/managers/{managerId}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ProblemDetails), 400)]
@@ -188,6 +199,7 @@ namespace ExpensesReport.Departaments.API.Controllers
         /// <response code="204">Success</response>
         /// <response code="400">Bad request</response>
         /// <response code="404">Not found</response>
+        [Authorize]
         [HttpDelete("{departamentId}/managers/{managerId}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ProblemDetails), 400)]
@@ -205,6 +217,7 @@ namespace ExpensesReport.Departaments.API.Controllers
         /// <returns>User collection</returns>
         /// <response code="200">Success</response>
         /// <response code="404">Not found</response>
+        [Authorize]
         [HttpGet("{departamentId}/users")]
         [ProducesResponseType(typeof(IEnumerable<ManagerViewModel>), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
@@ -223,6 +236,7 @@ namespace ExpensesReport.Departaments.API.Controllers
         /// <response code="204">Success</response>
         /// <response code="400">Bad request</response>
         /// <response code="404">Not found</response>
+        [Authorize]
         [HttpPost("{departamentId}/users/{userId}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ProblemDetails), 400)]
@@ -242,6 +256,7 @@ namespace ExpensesReport.Departaments.API.Controllers
         /// <response code="204">Success</response>
         /// <response code="400">Bad request</response>
         /// <response code="404">Not found</response>
+        [Authorize]
         [HttpDelete("{departamentId}/users/{userId}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ProblemDetails), 400)]
@@ -258,6 +273,7 @@ namespace ExpensesReport.Departaments.API.Controllers
         /// <param name="id">Manager and user identifier</param>
         /// <returns>Departament collection</returns>
         /// <response code="200">Success</response>
+        [Authorize]
         [HttpGet("allRelated/{id}")]
         [ProducesResponseType(typeof(IEnumerable<DepartamentViewModel>), 200)]
         public async Task<IActionResult> GetDepartamentsByManagerAndUser(Guid id)

@@ -1,6 +1,6 @@
 ﻿using Azure.Messaging.ServiceBus;
 using ExpensesReport.Identity.Core.Entities;
-using ExpensesReport.Identity.Core.repositories;
+using ExpensesReport.Identity.Core.Repositories;
 using ExpensesReport.Identity.Infrastructure.Persistence.Context;
 using ExpensesReport.Identity.Infrastructure.Persistence.Repositories;
 using ExpensesReport.Identity.Infrastructure.Queue;

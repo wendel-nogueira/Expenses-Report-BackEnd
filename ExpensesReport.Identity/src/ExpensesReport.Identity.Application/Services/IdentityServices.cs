@@ -5,7 +5,7 @@ using ExpensesReport.Identity.Application.Validators;
 using ExpensesReport.Identity.Application.ViewModels;
 using ExpensesReport.Identity.Core.Constants;
 using ExpensesReport.Identity.Core.Enums;
-using ExpensesReport.Identity.Core.repositories;
+using ExpensesReport.Identity.Core.Repositories;
 using ExpensesReport.Identity.Infrastructure.Authentication;
 using ExpensesReport.Identity.Infrastructure.Queue;
 using Microsoft.Extensions.Configuration;

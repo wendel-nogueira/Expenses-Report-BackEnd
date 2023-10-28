@@ -2,7 +2,7 @@
 using ExpensesReport.Identity.Core.Enums;
 using Microsoft.AspNetCore.Identity;
 
-namespace ExpensesReport.Identity.Core.repositories
+namespace ExpensesReport.Identity.Core.Repositories
 {
     public interface IUserIdentityRepository
     {
