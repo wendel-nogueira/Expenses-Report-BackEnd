@@ -2,6 +2,7 @@
 using ExpensesReport.Identity.Core.Enums;
 using ExpensesReport.Identity.Core.repositories;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace ExpensesReport.Identity.Infrastructure.Persistence.Repositories
@@ -50,6 +51,19 @@ namespace ExpensesReport.Identity.Infrastructure.Persistence.Repositories
             var user = await _userManager.FindByEmailAsync(email);
 
             return user;
+        }
+
+        public async Task<UserIdentity?> GetByResetPasswordTokenAsync(string token)
+        {
+            var users = await _userManager.Users.ToListAsync();
+
+            foreach (var user in users)
+            {
+                if (user.ResetPasswordToken == token)
+                    return user;
+            }
+
+            return null;
         }
 
         public async Task<IdentityRole?> GetRoleByIdentityIdAsync(string id)
@@ -121,6 +135,20 @@ namespace ExpensesReport.Identity.Infrastructure.Persistence.Repositories
 
             var newRole = UserIdentityRoleExtensions.ToFriendlyString(role);
             result = await _userManager.AddToRoleAsync(user, newRole);
+
+            return result;
+        }
+
+        public async Task<IdentityResult> ActivateAsync(string id)
+        {
+            var user = await _userManager.FindByIdAsync(id);
+
+            if (user == null)
+                return IdentityResult.Failed();
+
+            user.Activate();
+
+            var result = await _userManager.UpdateAsync(user);
 
             return result;
         }

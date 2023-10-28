@@ -24,7 +24,7 @@ namespace ExpensesReport.Identity.API.Controllers
         /// <returns>Identity data</returns>
         /// <response code="200">Success</response>
         /// <response code="404">Not found</response>
-        //[Authorize]
+        ////[Authorize]
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(IdentityViewModel), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
@@ -41,7 +41,7 @@ namespace ExpensesReport.Identity.API.Controllers
         /// <returns>Identity data</returns>
         /// <response code="200">Success</response>
         /// <response code="404">Not found</response>
-        [Authorize]
+        //[Authorize]
         [HttpGet("me")]
         [ProducesResponseType(typeof(IdentityCheckViewModel), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
@@ -60,7 +60,7 @@ namespace ExpensesReport.Identity.API.Controllers
         /// <returns>Identity data</returns>
         /// <response code="200">Success</response>
         /// <response code="404">Not found</response>
-        [Authorize]
+        //[Authorize]
         [HttpGet("email/{email}")]
         [ProducesResponseType(typeof(IdentityViewModel), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
@@ -76,7 +76,7 @@ namespace ExpensesReport.Identity.API.Controllers
         /// </summary>
         /// <returns>Identity collection</returns>
         /// <response code="200">Success</response>
-        //[Authorize]
+        ////[Authorize]
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<IdentityViewModel>), 200)]
         public async Task<IActionResult> GetAllIdentities()
@@ -91,7 +91,7 @@ namespace ExpensesReport.Identity.API.Controllers
         /// </summary>
         /// <returns>Identity collection</returns>
         /// <response code="200">Success</response>
-        [Authorize]
+        //[Authorize]
         [HttpGet("role/{role}")]
         [ProducesResponseType(typeof(IEnumerable<IdentityViewModel>), 200)]
         public async Task<IActionResult> GetAllIdentitiesByRole(string role)
@@ -106,7 +106,7 @@ namespace ExpensesReport.Identity.API.Controllers
         /// </summary>
         /// <returns>Role collection</returns>
         /// <response code="200">Success</response>
-        //[Authorize]
+        ////[Authorize]
         [HttpGet("roles/all")]
         [ProducesResponseType(typeof(IEnumerable<RoleViewModel>), 200)]
         public async Task<IActionResult> GetAllRoles()
@@ -136,13 +136,33 @@ namespace ExpensesReport.Identity.API.Controllers
         }
 
         /// <summary>
+        /// Request a reset password email
+        /// </summary>
+        /// <param name="inputModel">Model with identity email data</param>
+        /// <returns></returns>
+        /// <response code="200">Success</response>
+        /// <response code="404">Not found</response>
+        /// <response code="400">Bad request</response>
+        //[Authorize]
+        [HttpPost("password/reset")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(typeof(ProblemDetails), 400)]
+        [ProducesResponseType(typeof(ProblemDetails), 404)]
+        public async Task<IActionResult> RequestResetPassword([FromBody] ResetPasswordInputModel inputModel)
+        {
+            await _identityServices.SendResetPasswordEmail(inputModel);
+
+            return NoContent();
+        }
+
+        /// <summary>
         /// Register a identity
         /// </summary>
         /// <param name="inputModel">Model with identity data</param>
         /// <returns>Newly created identity</returns>
         /// <response code="201">Created</response>
         /// <response code="400">Bad request</response>
-        //[Authorize]
+        ////[Authorize]
         [HttpPost]
         [ProducesResponseType(typeof(IdentityViewModel), 201)]
         [ProducesResponseType(typeof(ProblemDetails), 400)]
@@ -155,45 +175,22 @@ namespace ExpensesReport.Identity.API.Controllers
         }
 
         /// <summary>
-        /// Register a identity password
-        /// </summary>
-        /// <param name="token">Token to define identity password</param>
-        /// <param name="inputModel">Model with identity password data</param>
-        /// <returns></returns>
-        /// <response code="204">Success</response>
-        /// <response code="400">Bad request</response>
-        /// <response code="404">Not found</response>
-        [HttpPost("password")]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(typeof(ProblemDetails), 400)]
-        [ProducesResponseType(typeof(ProblemDetails), 404)]
-        public async Task<IActionResult> AddIdentityPassword([FromQuery] string token, [FromBody] ChangePasswordInputModel inputModel)
-        {
-            await _identityServices.AddIdentityPassword(token, inputModel);
-
-            return NoContent();
-        }
-
-        /// <summary>
         /// Update a identity password
         /// </summary>
         /// <param name="inputModel">Model with identity password data</param>
+        /// <param name="token">Reset password token</param>
         /// <returns></returns>
         /// <response code="204">Success</response>
         /// <response code="400">Bad request</response>
         /// <response code="404">Not found</response>
-        [Authorize]
+        //[Authorize]
         [HttpPut("password")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ProblemDetails), 400)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
-        public async Task<IActionResult> UpdateIdentityPassword([FromBody] ChangePasswordInputModel inputModel)
+        public async Task<IActionResult> UpdateIdentityPassword([FromQuery] string token, [FromBody] ChangePasswordInputModel inputModel)
         {
-            var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", string.Empty);
-            var tokenDecoded = AuthServices.DecodeToken(token);
-            var identityId = new Guid(tokenDecoded[0].Value);
-
-            await _identityServices.UpdateIdentityPassword(identityId, inputModel);
+            await _identityServices.UpdateIdentityPassword(token, inputModel);
 
             return NoContent();
         }
@@ -206,7 +203,7 @@ namespace ExpensesReport.Identity.API.Controllers
         /// <response code="204">Success</response>
         /// <response code="400">Bad request</response>
         /// <response code="404">Not found</response>
-        [Authorize]
+        //[Authorize]
         [HttpPut("email")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ProblemDetails), 400)]
@@ -231,7 +228,7 @@ namespace ExpensesReport.Identity.API.Controllers
         /// <response code="204">Success</response>
         /// <response code="400">Bad request</response>
         /// <response code="404">Not found</response>
-        [Authorize]
+        //[Authorize]
         [HttpPut("{id}/role")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ProblemDetails), 400)]
@@ -244,13 +241,31 @@ namespace ExpensesReport.Identity.API.Controllers
         }
 
         /// <summary>
+        /// Change a identity deleted status
+        /// </summary>
+        /// <param name="id">Identity identifier</param>
+        /// <returns></returns>
+        /// <response code="204">Success</response>
+        /// <response code="404">Not found</response>
+        //[Authorize]
+        [HttpPut("{id}/deleted")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(typeof(ProblemDetails), 404)]
+        public async Task<IActionResult> ActivateIdentity(Guid id)
+        {
+            await _identityServices.ActivateIdentity(id);
+
+            return NoContent();
+        }
+
+        /// <summary>
         /// Delete a identity
         /// </summary>
         /// <param name="id">Identity identifier</param>
         /// <returns></returns>
         /// <response code="204">Success</response>
         /// <response code="404">Not found</response>
-        [Authorize]
+        //[Authorize]
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]

@@ -1,6 +1,5 @@
 ﻿using ExpensesReport.Identity.Core.Entities;
 using ExpensesReport.Identity.Infrastructure.Queue;
-using System.Text;
 
 namespace ExpensesReport.Identity.Application.Publishers
 {
@@ -8,11 +7,10 @@ namespace ExpensesReport.Identity.Application.Publishers
     {
         private readonly MailQueue _mailQueue = mailQueue;
 
-        public void SendAddPasswordMail(string id, string email, string token)
+        public void SendResetPasswordMail(UserIdentity identity)
         {
-            var messageBody = $"Identity Id: {id}\n Email: {email}\n Token: {token}";
-            var messageBodyBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(messageBody));
-            var sendMail = new SendMail("your_email@gmail.com", email, "Create password", messageBodyBase64, true);
+            var messageBody = $"Identity Id: {identity.Id}\n Email: {identity.Email}\n Token: {identity.ResetPasswordToken}";
+            var sendMail = new SendMail("your_email@gmail.com", identity.Email!, "Create password", messageBody, false);
 
             _mailQueue.Send(sendMail);
         }

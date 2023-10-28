@@ -47,19 +47,19 @@ namespace ExpensesReport.Identity.Infrastructure.Persistence.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "ca648175-b11d-414e-abdd-e8dd4aa75084",
+                            Id = "d264fa9c-989d-4d59-9674-3bb25e9e5e80",
                             Name = "FieldStaff",
                             NormalizedName = "FIELDSTAFF"
                         },
                         new
                         {
-                            Id = "44b68756-f460-4bb0-b485-00fa2045ad89",
+                            Id = "220413e4-d834-4d3b-81ac-fc9d87387a1b",
                             Name = "Manager",
                             NormalizedName = "MANAGER"
                         },
                         new
                         {
-                            Id = "cd48bf1b-0f96-4b2a-8d30-1cf86939d58b",
+                            Id = "aeb3013c-0bca-4003-990d-d1b788eabad0",
                             Name = "Accountant",
                             NormalizedName = "ACCOUNTANT"
                         });
@@ -248,6 +248,9 @@ namespace ExpensesReport.Identity.Infrastructure.Persistence.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("ResetPasswordToken")
+                        .HasColumnType("longtext");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
