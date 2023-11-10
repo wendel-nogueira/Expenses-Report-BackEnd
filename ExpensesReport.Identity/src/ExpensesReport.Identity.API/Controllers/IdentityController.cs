@@ -239,14 +239,14 @@ namespace ExpensesReport.Identity.API.Controllers
         }
 
         /// <summary>
-        /// Change a identity deleted status
+        /// Activate a identity
         /// </summary>
         /// <param name="id">Identity identifier</param>
         /// <returns></returns>
         /// <response code="204">Success</response>
         /// <response code="404">Not found</response>
         [Authorize]
-        [HttpPut("{id}/deleted")]
+        [HttpPatch("{id}/activate")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
         public async Task<IActionResult> ActivateIdentity(Guid id)
@@ -257,19 +257,19 @@ namespace ExpensesReport.Identity.API.Controllers
         }
 
         /// <summary>
-        /// Delete a identity
+        /// Deactivate a identity
         /// </summary>
         /// <param name="id">Identity identifier</param>
         /// <returns></returns>
         /// <response code="204">Success</response>
         /// <response code="404">Not found</response>
         [Authorize]
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}/deactivate")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
-        public async Task<IActionResult> DeleteIdentity(Guid id)
+        public async Task<IActionResult> DeactivateIdentity(Guid id)
         {
-            await _identityServices.DeleteIdentity(id);
+            await _identityServices.DeactivateIdentity(id);
 
             return NoContent();
         }

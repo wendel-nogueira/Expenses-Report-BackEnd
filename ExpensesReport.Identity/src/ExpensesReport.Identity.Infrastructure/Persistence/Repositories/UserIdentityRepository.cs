@@ -153,14 +153,14 @@ namespace ExpensesReport.Identity.Infrastructure.Persistence.Repositories
             return result;
         }
 
-        public async Task<IdentityResult> DeleteAsync(string id)
+        public async Task<IdentityResult> DeactivateAsync(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
 
             if (user == null)
                 return IdentityResult.Failed();
 
-            user.Delete();
+            user.Deactivate();
 
             var result = await _userManager.UpdateAsync(user);
 

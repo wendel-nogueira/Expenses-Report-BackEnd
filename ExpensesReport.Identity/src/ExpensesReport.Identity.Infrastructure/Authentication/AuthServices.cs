@@ -28,7 +28,6 @@ namespace ExpensesReport.Identity.Application.Services
             var issuer = config.GetSection("Jwt:Issuer").Value!;
             var audience = config.GetSection("Jwt:Audience").Value;
             var jwtExpireMinutes = config.GetSection("Jwt:ExpireMinutes").Value;
-
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey!));
 
             var tokenHandler = new JwtSecurityTokenHandler();

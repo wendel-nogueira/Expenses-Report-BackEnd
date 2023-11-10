@@ -11,7 +11,7 @@ namespace ExpensesReport.Projects.Application.Services
         Task<IEnumerable<ProjectViewModel>> GetProjectsByDepartamentId(Guid departmentId);
         Task<ProjectViewModel> AddProject(AddProjectInputModel inputModel);
         Task UpdateProject(Guid id, ChangeProjectInputModel inputModel);
-        Task DeleteProject(Guid id);
         Task ActivateProject(Guid id);
+        Task DeactivateProject(Guid id);
     }
 }

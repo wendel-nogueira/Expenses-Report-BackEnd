@@ -45,16 +45,15 @@ namespace ExpensesReport.Departaments.Infrastructure.Persistence.Repositories
             _context.Departaments.Update(departament);
             await _context.SaveChangesAsync();
         }
-
-        public async Task DeleteAsync(Departament departament)
-        {
-            departament.Delete();
-            await _context.SaveChangesAsync();
-        }
-
         public async Task ActivateAsync(Departament departament)
         {
             departament.Activate();
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeactivateAsync(Departament departament)
+        {
+            departament.Deactivate();
             await _context.SaveChangesAsync();
         }
 

@@ -26,7 +26,7 @@ namespace ExpensesReport.Identity.Core.Entities
             UpdatedAt = DateTime.Now;
         }
 
-        public void Delete()
+        public void Deactivate()
         {
             IsDeleted = true;
             UpdatedAt = DateTime.Now;

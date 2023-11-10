@@ -48,10 +48,6 @@ namespace ExpensesReport.Departaments.Infrastructure.Persistence.Context
 
                 entity.HasIndex(departament => departament.Acronym)
                     .IsUnique();
-
-                entity.Property(user => user.RowVersion)
-                    .IsConcurrencyToken()
-                    .IsRequired();
             });
 
             builder.Entity<Manager>(entity =>

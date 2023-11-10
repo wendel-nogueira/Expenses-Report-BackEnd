@@ -18,6 +18,6 @@ namespace ExpensesReport.Identity.Application.Services
         Task UpdateIdentityEmail(Guid id, ChangeEmailInputModel inputModel);
         Task UpdateIdentityRole(Guid id, ChangeIdentityRoleInputModel inputModel);
         Task ActivateIdentity(Guid id);
-        Task DeleteIdentity(Guid id);
+        Task DeactivateIdentity(Guid id);
     }
 }

@@ -10,8 +10,8 @@ namespace ExpensesReport.Departaments.Core.Repositories
         Task<IEnumerable<Departament>> GetAllAsync();
         Task AddAsync(Departament departament);
         Task UpdateAsync(Departament departament);
-        Task DeleteAsync(Departament departament);
         Task ActivateAsync(Departament departament);
+        Task DeactivateAsync(Departament departament);
         Task<IEnumerable<Manager>> GetAllManagersAsync(Guid id);
         Task AddManagerAsync(Guid departamentId, Guid managerId);
         Task RemoveManagerAsync(Guid departamentId, Guid managerId);

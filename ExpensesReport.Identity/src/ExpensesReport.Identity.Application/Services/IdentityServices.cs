@@ -240,11 +240,11 @@ namespace ExpensesReport.Identity.Application.Services
             await _userIdentityRepository.UpdateIdentityAsync(identity);
         }
 
-        public async Task DeleteIdentity(Guid id)
+        public async Task DeactivateIdentity(Guid id)
         {
             var identity = await _userIdentityRepository.GetByIdAsync(id.ToString()) ?? throw new NotFoundException("Identity not found!");
 
-            await _userIdentityRepository.DeleteAsync(identity.Id);
+            await _userIdentityRepository.DeactivateAsync(identity.Id);
         }
     }
 }

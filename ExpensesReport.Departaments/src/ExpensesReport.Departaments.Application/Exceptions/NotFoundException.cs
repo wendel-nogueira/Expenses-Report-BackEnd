@@ -1,4 +1,4 @@
-﻿namespace ExpensesReport.Users.Application.Exceptions
+﻿namespace ExpensesReport.Departaments.Application.Exceptions
 {
     public class NotFoundException : Exception
     {

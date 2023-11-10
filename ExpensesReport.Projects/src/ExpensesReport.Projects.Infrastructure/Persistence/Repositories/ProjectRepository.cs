@@ -53,18 +53,18 @@ namespace ExpensesReport.Projects.Infrastructure.Persistence.Repositories
             return entry.Entity;
         }
 
-        public async Task DeleteAsync(Project project)
-        {
-            project.Delete();
-            _context.Projects.Update(project);
-            await _context.SaveChangesAsync();
-        }
-
         public async Task ActivateAsync(Project project)
         {
             project.Activate();
             _context.Projects.Update(project);
             await UpdateAsync(project);
+        }
+
+        public async Task DeactivateAsync(Project project)
+        {
+            project.Deactivate();
+            _context.Projects.Update(project);
+            await _context.SaveChangesAsync();
         }
     }
 }
