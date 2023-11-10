@@ -1,8 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using System.ComponentModel.DataAnnotations;
-using System.Data;
-
-namespace ExpensesReport.Departaments.Core.Entities
+﻿namespace ExpensesReport.Departaments.Core.Entities
 {
     public class Departament : EntityBase
     {
@@ -21,8 +17,6 @@ namespace ExpensesReport.Departaments.Core.Entities
 
             Managers = new List<Manager>();
             Users = new List<User>();
-
-            RowVersion = BitConverter.GetBytes(DateTime.UtcNow.Ticks);
         }
 
         public string Name { get; set; }
@@ -34,22 +28,12 @@ namespace ExpensesReport.Departaments.Core.Entities
         public virtual ICollection<Manager> Managers { get; set; }
         public virtual ICollection<User> Users { get; }
 
-        [Timestamp]
-        public byte[] RowVersion { get; set; }
-
-
         public void Update(string name, string acronym, string description, byte[] rowVersion)
         {
-            if (!rowVersion.SequenceEqual(RowVersion))
-            {
-                throw new DBConcurrencyException("Concurrency violation");
-            }
-
             Name = name ?? Name;
             Acronym = acronym ?? Acronym;
             Description = description ?? Description;
             UpdatedAt = DateTime.Now;
-            RowVersion = BitConverter.GetBytes(DateTime.UtcNow.Ticks);
         }
 
         public void Activate()
@@ -58,7 +42,7 @@ namespace ExpensesReport.Departaments.Core.Entities
             UpdatedAt = DateTime.Now;
         }
 
-        public void Delete()
+        public void Deactivate()
         {
             IsDeleted = true;
             UpdatedAt = DateTime.Now;

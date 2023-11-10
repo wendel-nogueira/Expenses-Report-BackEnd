@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ExpensesReport.Users.Application.Validators
+namespace ExpensesReport.Departaments.Application.Validators
 {
     internal class InputModelValidator
     {

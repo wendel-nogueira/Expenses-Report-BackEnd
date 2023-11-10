@@ -103,19 +103,19 @@ namespace ExpensesReport.Projects.API.Controllers
         }
 
         /// <summary>
-        /// Delete a project
+        /// Deactivate a project
         /// </summary>
         /// <param name="id">Project identifier</param>
         /// <returns></returns>
         /// <response code="204">Success</response>
         /// <response code="404">Not found</response>
         [Authorize]
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}/deactivate")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
-        public async Task<IActionResult> DeleteProject(Guid id)
+        public async Task<IActionResult> DeactivateProject(Guid id)
         {
-            await _projectServices.DeleteProject(id);
+            await _projectServices.DeactivateProject(id);
             return NoContent();
         }
 

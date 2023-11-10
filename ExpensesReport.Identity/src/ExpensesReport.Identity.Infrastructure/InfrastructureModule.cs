@@ -33,7 +33,19 @@ namespace ExpensesReport.Identity.Infrastructure
             {
                 var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
-                options.UseMySql(configuration.GetConnectionString("DefaultConnection"), ServerVersion.AutoDetect(configuration.GetConnectionString("DefaultConnection")));
+                var dbHost = Environment.GetEnvironmentVariable("MYSQL_HOST");
+                var dbName = Environment.GetEnvironmentVariable("MYSQL_DATABASE");
+                var dbUser = Environment.GetEnvironmentVariable("MYSQL_USER");
+                var dbPassword = Environment.GetEnvironmentVariable("MYSQL_PASSWORD");
+
+                var connectionString = configuration.GetConnectionString("DefaultConnection");
+
+                if (dbHost != null)
+                {
+                    connectionString = $"Server={dbHost};Port=3306;Database={dbName};Uid={dbUser};Pwd={dbPassword};";
+                }
+
+                options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
             });
 
             return services;
@@ -66,14 +78,18 @@ namespace ExpensesReport.Identity.Infrastructure
             {
                 var configuration = services.BuildServiceProvider().GetService<IConfiguration>();
 
+                var key = configuration!.GetSection("Jwt:Key").Value!;
+                var issuer = configuration.GetSection("Jwt:Issuer").Value!;
+                var audience = configuration.GetSection("Jwt:Audience").Value!;
+
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
-                    ValidIssuer = configuration!.GetSection("Jwt:Issuer").Value,
+                    ValidIssuer = issuer,
                     ValidateAudience = true,
-                    ValidAudience = configuration.GetSection("Jwt:Audience").Value,
+                    ValidAudience = audience,
                     RequireExpirationTime = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration.GetSection("Jwt:Key").Value!)),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
                     ValidateIssuerSigningKey = true
                 };
             });
@@ -83,9 +99,8 @@ namespace ExpensesReport.Identity.Infrastructure
 
         private static IServiceCollection AddQueue(this IServiceCollection services)
         {
-            var serviceBusConnectionString = "Endpoint=sb://expensesrepotort.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=T1iYaDPoboFthwg188t/hy/5EVRn72r+8+ASbCAK9Gc=";
-
-            //Environment.GetEnvironmentVariable("ServiceBusConnectionString");
+            var configuration = services.BuildServiceProvider().GetService<IConfiguration>();
+            var serviceBusConnectionString = configuration!.GetConnectionString("ServiceBusConnection");
 
             services.AddSingleton(serviceProvider =>
             {

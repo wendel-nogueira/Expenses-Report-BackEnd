@@ -1,8 +1,8 @@
 ﻿using ExpensesReport.Projects.Application.InputModels;
 using ExpensesReport.Projects.Application.ViewModels;
 using ExpensesReport.Projects.Core.Repositories;
-using ExpensesReport.Users.Application.Exceptions;
-using ExpensesReport.Users.Application.Validators;
+using ExpensesReport.Projects.Application.Exceptions;
+using ExpensesReport.Projects.Application.Validators;
 
 namespace ExpensesReport.Projects.Application.Services
 {
@@ -75,11 +75,11 @@ namespace ExpensesReport.Projects.Application.Services
             await _projectRepository.UpdateAsync(project);
         }
 
-        public async Task DeleteProject(Guid id)
+        public async Task DeactivateProject(Guid id)
         {
             var project = await _projectRepository.GetByIdAsync(id) ?? throw new NotFoundException("Project not found!");
 
-            await _projectRepository.DeleteAsync(project);
+            await _projectRepository.DeactivateAsync(project);
         }
 
         public async Task ActivateProject(Guid id)

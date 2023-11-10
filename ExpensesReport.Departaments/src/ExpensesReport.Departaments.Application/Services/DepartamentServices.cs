@@ -1,8 +1,8 @@
 ﻿using ExpensesReport.Departaments.Application.InputModels;
 using ExpensesReport.Departaments.Application.ViewModels;
 using ExpensesReport.Departaments.Core.Repositories;
-using ExpensesReport.Users.Application.Exceptions;
-using ExpensesReport.Users.Application.Validators;
+using ExpensesReport.Departaments.Application.Exceptions;
+using ExpensesReport.Departaments.Application.Validators;
 
 namespace ExpensesReport.Departaments.Application.Services
 {
@@ -74,11 +74,11 @@ namespace ExpensesReport.Departaments.Application.Services
             await _departamentRepository.UpdateAsync(departament);
         }
 
-        public async Task DeleteDepartament(Guid id)
+        public async Task DeactivateDepartament(Guid id)
         {
             var departament = await _departamentRepository.GetByIdAsync(id) ?? throw new NotFoundException("Departament not found!");
 
-            await _departamentRepository.DeleteAsync(departament);
+            await _departamentRepository.DeactivateAsync(departament);
         }
 
         public async Task ActivateDepartament(Guid id)

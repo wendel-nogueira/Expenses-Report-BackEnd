@@ -11,8 +11,8 @@ namespace ExpensesReport.Departaments.Application.Services
         Task<IEnumerable<DepartamentViewModel>> GetAllDepartaments();
         Task<DepartamentViewModel> AddDepartament(AddDepartamentInputModel inputModel);
         Task UpdateDepartament(Guid id, ChangeDepartamentInputModel inputModel);
-        Task DeleteDepartament(Guid id);
         Task ActivateDepartament(Guid id);
+        Task DeactivateDepartament(Guid id);
         Task<ManagerViewModel> GetDepartamentManagers(Guid departamentId);
         Task AddDepartamentManager(Guid departamentId, Guid managerId);
         Task RemoveDepartamentManager(Guid departamentId, Guid managerId);

@@ -1,6 +1,6 @@
 using ExpensesReport.Departaments.Application;
 using ExpensesReport.Departaments.Infrastructure;
-using ExpensesReport.Users.API.Filters;
+using ExpensesReport.Departaments.API.Filters;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 

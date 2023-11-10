@@ -1,21 +1,28 @@
-version: '3'
+version: "3"
 services:
-  # users-microservice:
-  #   container_name: users-microservice
-  #   image: usersmicroservice
-  #   restart: always
-  #   build:
-  #     context: ./ExpensesReport.Users
-  #     dockerfile: Dockerfile
-  #   environment:
-  #     - ASPNETCORE_ENVIRONMENT=Development
-  #   ports:
-  #     - 5000:80
-  #     - 5001:443
-  #   depends_on:
-  #     - users-database
-  #   networks:
-  #     - expenses-report-network
+  users-microservice:
+    container_name: users-microservice
+    image: usersmicroservice
+    restart: always
+    build:
+      context: ./ExpensesReport.Users
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - MYSQL_HOST=users-database
+      - MYSQL_DATABASE=${USER_DATABASE}
+      - MYSQL_USER=${USER_DATABASE_USER}
+      - MYSQL_PASSWORD=${USER_DATABASE_PASSWORD}
+    ports:
+      - ${USER_PORT}:80
+    links:
+      - users-database
+      - identities-microservice
+    depends_on:
+      - users-database
+      - identities-microservice
+    networks:
+      - expenses-report-network
 
   users-database:
     container_name: users-database
@@ -33,25 +40,30 @@ services:
     networks:
       - expenses-report-network
 
-  # identity-microservice:
-  #   container_name: identity-microservice
-  #   image: identitymicroservice
-  #   restart: always
-  #   build:
-  #     context: ./ExpensesReport.Identity
-  #     dockerfile: Dockerfile
-  #   environment:
-  #     - ASPNETCORE_ENVIRONMENT=Development
-  #   ports:
-  #     - 5002:80
-  #     - 5003:443
-  #   depends_on:
-  #     - identity-database
-  #   networks:
-  #     - expenses-report-network
+  identities-microservice:
+    container_name: identities-microservice
+    image: identitymicroservice
+    restart: always
+    build:
+      context: ./ExpensesReport.Identity
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - MYSQL_HOST=identities-database
+      - MYSQL_DATABASE=${IDENTITY_DATABASE}
+      - MYSQL_USER=${IDENTITY_DATABASE_USER}
+      - MYSQL_PASSWORD=${IDENTITY_DATABASE_PASSWORD}
+    ports:
+      - ${iDENTITY_PORT}:80
+    links:
+      - identities-database
+    depends_on:
+      - identities-database
+    networks:
+      - expenses-report-network
 
-  identity-database:
-    container_name: identity-database
+  identities-database:
+    container_name: identities-database
     image: mysql:5.7
     restart: always
     environment:
@@ -66,8 +78,32 @@ services:
     networks:
       - expenses-report-network
 
-  departament-database:
-    container_name: departament-database
+  departaments-microservice:
+    container_name: departaments-microservice
+    image: departamentmicroservice
+    restart: always
+    build:
+      context: ./ExpensesReport.Departaments
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - MYSQL_HOST=departaments-database
+      - MYSQL_DATABASE=${DEPARTAMENT_DATABASE}
+      - MYSQL_USER=${DEPARTAMENT_DATABASE_USER}
+      - MYSQL_PASSWORD=${DEPARTAMENT_DATABASE_PASSWORD}
+    ports:
+      - ${DEPARTAMENT_PORT}:80
+    links:
+      - departaments-database
+      - identities-microservice
+    depends_on:
+      - departaments-database
+      - identities-microservice
+    networks:
+      - expenses-report-network
+
+  departaments-database:
+    container_name: departaments-database
     image: mysql:5.7
     restart: always
     environment:
@@ -82,8 +118,32 @@ services:
     networks:
       - expenses-report-network
 
-  project-database:
-    container_name: project-database
+  projects-microservice:
+    container_name: projects-microservice
+    image: projectmicroservice
+    restart: always
+    build:
+      context: ./ExpensesReport.Projects
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - MYSQL_HOST=projects-database
+      - MYSQL_DATABASE=${PROJECT_DATABASE}
+      - MYSQL_USER=${PROJECT_DATABASE_USER}
+      - MYSQL_PASSWORD=${PROJECT_DATABASE_PASSWORD}
+    ports:
+      - ${PROJECT_PORT}:80
+    links:
+      - projects-database
+      - identities-microservice
+    depends_on:
+      - projects-database
+      - identities-microservice
+    networks:
+      - expenses-report-network
+
+  projects-database:
+    container_name: projects-database
     image: mysql:5.7
     restart: always
     environment:
@@ -98,22 +158,65 @@ services:
     networks:
       - expenses-report-network
 
-  # mail-microservice:
-  #   container_name: mail-microservice
-  #   image: mailmicroservice
-  #   restart: always
-  #   build:
-  #     context: ./ExpensesReport.Mail
-  #     dockerfile: Dockerfile
-  #   environment:
-  #     - ASPNETCORE_ENVIRONMENT=Development
-  #     - SMTP_HOST=${SMTP_HOST}
-  #     - SMTP_PORT=${SMTP_PORT}
-  #     - SMTP_USERNAME=${SMTP_USERNAME}
-  #     - SMTP_PASSWORD=${SMTP_PASSWORD}
-  #     - SMTP_ENABLESSL=${SMTP_ENABLESSL}
-  #   networks:
-  #     - expenses-report-network
+  mail-microservice:
+    container_name: mail-microservice
+    image: mailmicroservice
+    restart: always
+    build:
+      context: ./ExpensesReport.Mail
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Developmen
+      - AZURE_FUNCTIONS_ENVIRONMENT=Development
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_USERNAME=${SMTP_USERNAME}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - SMTP_ENABLESSL=${SMTP_ENABLESSL}
+      - ServiceBusConnection=${SERVICE_BUS_CONNECTION_STRING}
+    networks:
+      - expenses-report-network
+
+  files-microservice:
+    container_name: files-microservice
+    image: filesmicroservice
+    restart: always
+    build:
+      context: ./ExpensesReport.Files
+      dockerfile: Dockerfile
+    ports:
+      - ${FILE_PORT}:80
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - StorageAccount=${STORAGE_ACCOUNT}
+      - Key=${STORAGE_KEY}
+      - Container=${STORAGE_CONTAINER}
+    networks:
+      - expenses-report-network
+
+  api-gateway:
+    container_name: api-gateway
+    image: apigateway
+    restart: always
+    build:
+      context: ./ExpensesReport.ApiGateway
+      dockerfile: Dockerfile
+    ports:
+      - ${API_GATEWAY_PORT}:80
+    networks:
+      - expenses-report-network
+    links:
+      - users-microservice
+      - identities-microservice
+      - departaments-microservice
+      - projects-microservice
+      - files-microservice
+    depends_on:
+      - users-microservice
+      - identities-microservice
+      - departaments-microservice
+      - projects-microservice
+      - files-microservice
 
 networks:
   expenses-report-network:
