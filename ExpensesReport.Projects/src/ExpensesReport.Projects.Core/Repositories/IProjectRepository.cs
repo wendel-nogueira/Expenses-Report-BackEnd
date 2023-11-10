@@ -10,7 +10,7 @@ namespace ExpensesReport.Projects.Core.Repositories
         Task<IEnumerable<Project>> GetProjectsByDepartamentIdAsync(Guid departamentId);
         Task<Project> AddAsync(Project project);
         Task<Project> UpdateAsync(Project project);
-        Task DeleteAsync(Project project);
+        Task DeactivateAsync(Project project);
         Task ActivateAsync(Project project);
     }
 }

@@ -29,7 +29,7 @@
             UpdatedAt = DateTime.UtcNow;
         }
 
-        public void Delete()
+        public void Deactivate()
         {
             IsDeleted = true;
             UpdatedAt = DateTime.UtcNow;

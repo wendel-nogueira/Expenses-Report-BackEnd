@@ -28,7 +28,19 @@ namespace ExpensesReport.Projects.Infrastructure
             {
                 var configuration = serviceProvider.GetRequiredService<IConfiguration>();
 
-                options.UseMySql(configuration.GetConnectionString("DefaultConnection"), ServerVersion.AutoDetect(configuration.GetConnectionString("DefaultConnection")));
+                var dbHost = Environment.GetEnvironmentVariable("MYSQL_HOST");
+                var dbName = Environment.GetEnvironmentVariable("MYSQL_DATABASE");
+                var dbUser = Environment.GetEnvironmentVariable("MYSQL_USER");
+                var dbPassword = Environment.GetEnvironmentVariable("MYSQL_PASSWORD");
+
+                var connectionString = configuration.GetConnectionString("DefaultConnection");
+
+                if (dbHost != null)
+                {
+                    connectionString = $"Server={dbHost};Port=3306;Database={dbName};Uid={dbUser};Pwd={dbPassword};";
+                }
+
+                options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
             });
 
             return services;

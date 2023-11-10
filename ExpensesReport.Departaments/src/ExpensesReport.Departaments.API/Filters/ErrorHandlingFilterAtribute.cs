@@ -1,9 +1,9 @@
-﻿using ExpensesReport.Users.Application.Exceptions;
+﻿using ExpensesReport.Departaments.Application.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using System.Net;
 
-namespace ExpensesReport.Users.API.Filters
+namespace ExpensesReport.Departaments.API.Filters
 {
     public class ErrorHandlingFilterAtribute : IExceptionFilter
     {

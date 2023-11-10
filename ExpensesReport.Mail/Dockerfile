@@ -5,6 +5,7 @@ EXPOSE 80
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 RUN ls -la
+COPY ["src/ExpensesReport.Mail.Infrastructure/local.settings.json", "src/ExpensesReport.Mail.Infrastructure/"]
 COPY ["src/ExpensesReport.Mail.Infrastructure/ExpensesReport.Mail.Infrastructure.csproj", "src/ExpensesReport.Mail.Infrastructure/"]
 COPY ["src/ExpensesReport.Mail.Application/ExpensesReport.Mail.Application.csproj", "src/ExpensesReport.Mail.Application/"]
 COPY ["src/ExpensesReport.Mail.Core/ExpensesReport.Mail.Core.csproj", "src/ExpensesReport.Mail.Core/"]

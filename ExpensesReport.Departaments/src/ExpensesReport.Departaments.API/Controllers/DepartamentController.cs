@@ -120,19 +120,19 @@ namespace ExpensesReport.Departaments.API.Controllers
         }
 
         /// <summary>
-        /// Delete a departament
+        /// Deactivate a departament
         /// </summary>
         /// <param name="id">Departament identifier</param>
         /// <returns></returns>
         /// <response code="204">Success</response>
         /// <response code="404">Not found</response>
         [Authorize]
-        [HttpDelete("{id}")]
+        [HttpDelete("{id}/deactivate")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
-        public async Task<IActionResult> DeleteDepartament(Guid id)
+        public async Task<IActionResult> DeactivateDepartament(Guid id)
         {
-            await _departamentServices.DeleteDepartament(id);
+            await _departamentServices.DeactivateDepartament(id);
             return NoContent();
         }
 
@@ -268,9 +268,9 @@ namespace ExpensesReport.Departaments.API.Controllers
         }
 
         /// <summary>
-        /// Get all departaments from a manager and user
+        /// Get all departaments from a manager or user
         /// </summary>
-        /// <param name="id">Manager and user identifier</param>
+        /// <param name="id">Manager or user identifier</param>
         /// <returns>Departament collection</returns>
         /// <response code="200">Success</response>
         [Authorize]

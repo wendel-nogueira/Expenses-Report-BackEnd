@@ -19,6 +19,6 @@ namespace ExpensesReport.Identity.Core.Repositories
         Task<IdentityResult> UpdateIdentityAsync(UserIdentity identity);
         Task<IdentityResult> UpdateIdentityRoleAsync(UserIdentity identity, UserIdentityRole role);
         Task<IdentityResult> ActivateAsync(string id);
-        Task<IdentityResult> DeleteAsync(string id);
+        Task<IdentityResult> DeactivateAsync(string id);
     }
 }

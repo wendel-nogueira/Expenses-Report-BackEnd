@@ -1,4 +1,4 @@
-﻿namespace ExpensesReport.Users.Application.Exceptions
+﻿namespace ExpensesReport.Projects.Application.Exceptions
 {
     public class BadRequestException : Exception
     {
