@@ -1,0 +1,112 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: microsservicos
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: microsservicos
+  template:
+    metadata:
+      labels:
+        app: microsservicos
+    spec:
+      containers:
+        - name: api-gateway
+          image: hulley/apigateway:latest
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: "1"
+            requests:
+              memory: 256Mi
+              cpu: "0.2"
+            ports:
+              - containerPort: 8080
+        - name: identity-microservice
+          image: hulley/identitymicroservice:latest
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: "1"
+            requests:
+              memory: 256Mi
+              cpu: "0.2"
+            ports:
+              - containerPort: 8081
+        - name: users-microservice
+          image: hulley/usersmicroservice:latest
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: "1"
+            requests:
+              memory: 256Mi
+              cpu: "0.2"
+            ports:
+              - containerPort: 8082
+        - name: departaments-microservice
+          image: hulley/departamentsmicroservice:latest
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: "1"
+            requests:
+              memory: 256Mi
+              cpu: "0.2"
+            ports:
+              - containerPort: 8083
+        - name: projects-microservice
+          image: hulley/projectsmicroservice:latest
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: "1"
+            requests:
+              memory: 256Mi
+              cpu: "0.2"
+            ports:
+              - containerPort: 8084
+        - name: files-microservice
+          image: hulley/filesmicroservice:latest
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: "1"
+            requests:
+              memory: 256Mi
+              cpu: "0.2"
+            ports:
+              - containerPort: 8085
+        - name: expenses-microservice
+          image: hulley/expensesmicroservice:latest
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: "1"
+            requests:
+              memory: 256Mi
+              cpu: "0.2"
+            ports:
+              - containerPort: 8086
+        - name: export-microservice
+          image: hulley/exportmicroservice:latest
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: "1"
+            requests:
+              memory: 256Mi
+              cpu: "0.2"
+            ports:
+              - containerPort: 8087
+        - name: mail-microservice
+          image: hulley/mailmicroservice:latest
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: "1"
+            requests:
+              memory: 256Mi
+              cpu: "0.2"

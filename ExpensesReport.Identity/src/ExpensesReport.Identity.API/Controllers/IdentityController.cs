@@ -167,7 +167,6 @@ namespace ExpensesReport.Identity.API.Controllers
         [ProducesResponseType(typeof(ProblemDetails), 400)]
         public async Task<IActionResult> AddIdentity([FromBody] AddIdentityInputModel inputModel)
         {
-            Console.WriteLine(inputModel);
             var identity = await _identityServices.AddIdentity(inputModel);
 
             return CreatedAtAction(nameof(GetIdentityById), new { id = identity.Id }, identity);
