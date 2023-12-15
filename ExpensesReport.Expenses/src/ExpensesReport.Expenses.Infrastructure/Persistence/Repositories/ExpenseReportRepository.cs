@@ -34,9 +34,9 @@ namespace ExpensesReport.Expenses.Infrastructure.Persistence.Repositories
             return await GetCollection().Find(e => e.UserId == userId).ToListAsync();
         }
 
-        public async Task<IEnumerable<ExpenseReport>> GetByDepartmentAsync(Guid departmentId)
+        public async Task<IEnumerable<ExpenseReport>> GetByDepartamentAsync(Guid departamentId)
         {
-            return await GetCollection().Find(e => e.DepartmentId == departmentId).ToListAsync();
+            return await GetCollection().Find(e => e.DepartamentId == departamentId).ToListAsync();
         }
 
         public async Task<IEnumerable<ExpenseReport>> GetByProjectAsync(Guid projectId)

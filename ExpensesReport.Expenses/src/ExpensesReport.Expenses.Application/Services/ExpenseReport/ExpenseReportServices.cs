@@ -6,7 +6,7 @@ using ExpensesReport.Expenses.Core.Repositories;
 
 namespace ExpensesReport.Expenses.Application.Services.ExpenseReport
 {
-    public class ExpenseReportServices(IExpenseReportRepository expenseReportRepository) : IExpenseReportServices
+    public class ExpenseReportServices(IExpenseReportRepository expenseReportRepository, IExpenseRepository expenseRepository, ISignatureRepository signatureRepository) : IExpenseReportServices
     {
         public async Task<IEnumerable<ExpenseReportViewModel>> GetAllExpenseReports()
         {
@@ -17,6 +17,15 @@ namespace ExpensesReport.Expenses.Application.Services.ExpenseReport
         public async Task<ExpenseReportViewModel> GetExpenseReportById(string id)
         {
             var expenseReport = await expenseReportRepository.GetByIdAsync(id) ?? throw new NotFoundException("Expense report not found!");
+
+            var expenses = await expenseRepository.GetAllInExpenseReportAsync(id);
+            if (expenses != null)
+                expenseReport.Expenses = (ICollection<Core.Entities.Expense>)expenses;
+
+            var signatures = await signatureRepository.GetAllInExpenseReportAsync(id);
+            if (signatures != null)
+                expenseReport.Signatures = (ICollection<Core.Entities.Signature>)signatures;
+
             return ExpenseReportViewModel.FromEntity(expenseReport);
         }
 
@@ -26,9 +35,9 @@ namespace ExpensesReport.Expenses.Application.Services.ExpenseReport
             return expenseReports.Select(ExpenseReportViewModel.FromEntity);
         }
 
-        public async Task<IEnumerable<ExpenseReportViewModel>> GetExpenseReportsByDepartment(Guid departmentId)
+        public async Task<IEnumerable<ExpenseReportViewModel>> GetExpenseReportsByDepartament(Guid departamentId)
         {
-            var expenseReports = await expenseReportRepository.GetByDepartmentAsync(departmentId);
+            var expenseReports = await expenseReportRepository.GetByDepartamentAsync(departamentId);
             return expenseReports.Select(ExpenseReportViewModel.FromEntity);
         }
 
@@ -48,8 +57,15 @@ namespace ExpensesReport.Expenses.Application.Services.ExpenseReport
             }
 
             var expenseReport = inputModel.ToEntity();
-
             await expenseReportRepository.AddAsync(expenseReport);
+
+            if (inputModel.Expenses != null)
+            {
+                foreach (var expense in inputModel.Expenses)
+                {
+                    await expenseRepository.AddAsync(expenseReport.Id.ToString(), expense.ToEntity());
+                }
+            }
 
             return ExpenseReportViewModel.FromEntity(expenseReport);
         }
@@ -60,7 +76,7 @@ namespace ExpensesReport.Expenses.Application.Services.ExpenseReport
 
             expenseReport.Update(
                 expenseReport.UserId,
-                expenseReport.DepartmentId,
+                expenseReport.DepartamentId,
                 expenseReport.ProjectId,
                 inputModel.Status!.Value,
                 inputModel.TotalAmount!.Value,
@@ -70,7 +86,8 @@ namespace ExpensesReport.Expenses.Application.Services.ExpenseReport
                 inputModel.PaidById!.Value,
                 inputModel.PaidDate!.Value,
                 inputModel.StatusNotes!,
-                inputModel.ProofOfPayment!);
+                inputModel.ProofOfPayment!,
+                inputModel.PaidDateTimeZone!);
 
             await expenseReportRepository.UpdateAsync(expenseReport);
 

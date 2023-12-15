@@ -33,6 +33,9 @@ namespace ExpensesReport.Expenses.Application.InputModels.ExpenseReportInputMode
         [DataType(DataType.DateTime)]
         public DateTime? PaidDate { get; set; }
 
+        [Required(ErrorMessage = "PaidDateTimeZone is required!")]
+        public string? PaidDateTimeZone { get; set; }
+
         [Required(ErrorMessage = "StatusNotes is required!")]
         [StringLength(100, ErrorMessage = "StatusNotes must be less than 100 characters!")]
         public string? StatusNotes { get; set; }
@@ -41,6 +44,6 @@ namespace ExpensesReport.Expenses.Application.InputModels.ExpenseReportInputMode
         [StringLength(100, ErrorMessage = "ProofOfPayment must be less than 100 characters!")]
         public string? ProofOfPayment { get; set; }
 
-        public ExpenseReport ToEntity(Guid userId, Guid departmentId, Guid projectId) => new(userId, departmentId, projectId, Status!.Value, TotalAmount!.Value, AmountApproved!.Value, AmountRejected!.Value, AmountPaid!.Value, PaidById!.Value, PaidDate!.Value, StatusNotes!, ProofOfPayment!);
+        public ExpenseReport ToEntity(Guid userId, Guid departmentId, Guid projectId) => new(userId, departmentId, projectId, Status!.Value, TotalAmount!.Value, AmountApproved!.Value, AmountRejected!.Value, AmountPaid!.Value, PaidById!.Value, PaidDate!.Value, StatusNotes!, ProofOfPayment!, PaidDateTimeZone);
     }
 }

@@ -51,6 +51,7 @@ namespace ExpensesReport.Expenses.Infrastructure.Persistence.Repositories
             var expenseReport = await GetCollection().Find(e => e.Id == expenseId).FirstOrDefaultAsync();
 
             expenseReport.AddExpense(expense);
+            await GetCollection().ReplaceOneAsync(e => e.Id == expenseReport.Id, expenseReport);
 
             return expense;
         }
