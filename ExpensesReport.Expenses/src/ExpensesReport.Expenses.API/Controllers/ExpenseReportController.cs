@@ -50,7 +50,7 @@ namespace ExpensesReport.Expenses.API.Controllers
         /// <summary>
         /// Get a expense report by user
         /// </summary>
-        /// <param name="userId">Expense report identifier</param>
+        /// <param name="userId">User identifier</param>
         /// <returns>Expense report data</returns>
         /// <response code="200">Success</response>
         /// <response code="404">Not found</response>
@@ -63,24 +63,24 @@ namespace ExpensesReport.Expenses.API.Controllers
         }
 
         /// <summary>
-        /// Get a expense report by department
+        /// Get a expense report by departament
         /// </summary>
-        /// <param name="departmentId">Expense report identifier</param>
+        /// <param name="departamentId">Departament identifier</param>
         /// <returns>Expense report data</returns>
         /// <response code="200">Success</response>
         /// <response code="404">Not found</response>
-        [HttpGet("department/{departmentId}")]
+        [HttpGet("departament/{departamentId}")]
         [ProducesResponseType(typeof(IEnumerable<ExpenseReportViewModel>), 200)]
-        public async Task<IActionResult> GetExpenseReportsByDepartment(Guid departmentId)
+        public async Task<IActionResult> GetExpenseReportsByDepartament(Guid departamentId)
         {
-            var result = await _expenseReportServices.GetExpenseReportsByDepartment(departmentId);
+            var result = await _expenseReportServices.GetExpenseReportsByDepartament(departamentId);
             return Ok(result);
         }
 
         /// <summary>
         /// Get a expense report by project
         /// </summary>
-        /// <param name="projectId">Expense report identifier</param>
+        /// <param name="projectId">Project identifier</param>
         /// <returns>Expense report data</returns>
         /// <response code="200">Success</response>
         /// <response code="404">Not found</response>

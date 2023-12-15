@@ -8,7 +8,7 @@ namespace ExpensesReport.Expenses.Application.Services.ExpenseReport
         public Task<IEnumerable<ExpenseReportViewModel>> GetAllExpenseReports();
         public Task<ExpenseReportViewModel> GetExpenseReportById(string id);
         public Task<IEnumerable<ExpenseReportViewModel>> GetExpenseReportsByUser(Guid userId);
-        public Task<IEnumerable<ExpenseReportViewModel>> GetExpenseReportsByDepartment(Guid departmentId);
+        public Task<IEnumerable<ExpenseReportViewModel>> GetExpenseReportsByDepartament(Guid departamentId);
         public Task<IEnumerable<ExpenseReportViewModel>> GetExpenseReportsByProject(Guid projectId);
         public Task<ExpenseReportViewModel> AddExpenseReport(AddExpenseReportInputModel inputModel);
         public Task<ExpenseReportViewModel> UpdateExpenseReport(string id, ChangeExpenseReportInputModel inputModel);
