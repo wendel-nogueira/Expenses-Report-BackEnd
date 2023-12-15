@@ -7,7 +7,7 @@ namespace ExpensesReport.Expenses.Application.ViewModels
     {
         public string? Id { get; set; }
         public Guid? UserId { get; set; }
-        public Guid? DepartmentId { get; set; }
+        public Guid? DepartamentId { get; set; }
         public Guid? ProjectId { get; set; }
         public ExpenseReportStatus? Status { get; set; }
         public decimal? TotalAmount { get; set; }
@@ -19,12 +19,14 @@ namespace ExpensesReport.Expenses.Application.ViewModels
         public string? StatusNotes { get; set; }
         public string? ProofOfPayment { get; set; }
         public bool? IsDeleted { get; set; }
+        public IEnumerable<ExpenseViewModel>? Expenses { get; set; }
+        public IEnumerable<SignatureViewModel>? Signatures { get; set; }
 
         public static ExpenseReportViewModel FromEntity(ExpenseReport expenseReport) => new()
         {
             Id = expenseReport.Id,
             UserId = expenseReport.UserId,
-            DepartmentId = expenseReport.DepartmentId,
+            DepartamentId = expenseReport.DepartamentId,
             ProjectId = expenseReport.ProjectId,
             Status = expenseReport.Status,
             TotalAmount = expenseReport.TotalAmount,
@@ -35,7 +37,9 @@ namespace ExpensesReport.Expenses.Application.ViewModels
             PaidDate = expenseReport.PaidDate,
             StatusNotes = expenseReport.StatusNotes,
             ProofOfPayment = expenseReport.ProofOfPayment,
-            IsDeleted = expenseReport.IsDeleted
+            IsDeleted = expenseReport.IsDeleted,
+            Expenses = expenseReport.Expenses.Select(ExpenseViewModel.FromEntity),
+            Signatures = expenseReport.Signatures.Select(SignatureViewModel.FromEntity)
         };
     }
 }

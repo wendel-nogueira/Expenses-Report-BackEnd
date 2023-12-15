@@ -6,7 +6,7 @@ using ExpensesReport.Expenses.Core.Repositories;
 
 namespace ExpensesReport.Expenses.Application.Services.Expense
 {
-    public class ExpenseServices(IExpenseRepository expenseRepository, IExpenseReportRepository expenseReportRepository) : IExpenseServices
+    public class ExpenseServices(IExpenseRepository expenseRepository, IExpenseReportRepository expenseReportRepository, IExpenseAccountRepository expenseAccountRepository) : IExpenseServices
     {
         public async Task<IEnumerable<ExpenseViewModel>> GetAllExpenses()
         {
@@ -36,6 +36,7 @@ namespace ExpensesReport.Expenses.Application.Services.Expense
                 throw new BadRequestException("Error on create expense!", errorsInput);
             }
 
+            _ = await expenseAccountRepository.GetByIdAsync(inputModel.ExpenseAccount!) ?? throw new NotFoundException("Expense account not found!");
             var expenseReport = await expenseReportRepository.GetByIdAsync(expenseReportId) ?? throw new NotFoundException("Expense report not found!");
             var expense = inputModel.ToEntity();
 
@@ -48,8 +49,9 @@ namespace ExpensesReport.Expenses.Application.Services.Expense
         {
             var expenseReport = await expenseRepository.GetExpenseReportByExpenseIdAsync(id) ?? throw new NotFoundException("Expense report not found!");
             var expense = await expenseRepository.GetByIdAsync(id) ?? throw new NotFoundException("Expense not found!");
+            _ = await expenseAccountRepository.GetByIdAsync(inputModel.ExpenseAccount!) ?? throw new NotFoundException("Expense account not found!");
 
-            expense.Update(inputModel.Amount!.Value, inputModel.DateIncurred!.Value, inputModel.Explanation!, inputModel.Status!.Value, inputModel.AccountingNotes!, inputModel.Receipt!);
+            expense.Update(inputModel.ExpenseAccount!, inputModel.Amount!.Value, inputModel.DateIncurred!.Value, inputModel.Explanation!, inputModel.Status!.Value, inputModel.AccountingNotes!, inputModel.Receipt!, inputModel.DateIncurredTimeZone);
 
             await expenseRepository.UpdateAsync(expenseReport.Id, expense);
 

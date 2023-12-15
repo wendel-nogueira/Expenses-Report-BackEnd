@@ -7,10 +7,10 @@ namespace ExpensesReport.Expenses.Core.Entities
 {
     public class ExpenseReport : EntityBase
     {
-        public ExpenseReport(Guid userId, Guid departmentId, Guid projectId, ExpenseReportStatus status, decimal totalAmount, decimal? amountApproved, decimal? amountRejected, decimal? amountPaid, Guid? paidById, DateTime? paidDate, string statusNotes, string? proofOfPayment)
+        public ExpenseReport(Guid userId, Guid departamentId, Guid projectId, ExpenseReportStatus? status, decimal totalAmount, decimal? amountApproved, decimal? amountRejected, decimal? amountPaid, Guid? paidById, DateTime? paidDate, string statusNotes, string? proofOfPayment, string? paidDateTimeZone)
         {
             UserId = userId;
-            DepartmentId = departmentId;
+            DepartamentId = departamentId;
             ProjectId = projectId;
             Status = status;
             TotalAmount = totalAmount;
@@ -19,6 +19,7 @@ namespace ExpensesReport.Expenses.Core.Entities
             AmountPaid = amountPaid;
             PaidById = paidById;
             PaidDate = paidDate;
+            PaidDateTimeZone = paidDateTimeZone;
             StatusNotes = statusNotes;
             ProofOfPayment = proofOfPayment;
 
@@ -30,12 +31,12 @@ namespace ExpensesReport.Expenses.Core.Entities
         public Guid UserId { get; set; }
 
         [BsonRepresentation(BsonType.String)]
-        public Guid DepartmentId { get; set; }
+        public Guid DepartamentId { get; set; }
 
         [BsonRepresentation(BsonType.String)]
         public Guid ProjectId { get; set; }
 
-        public ExpenseReportStatus Status { get; set; }
+        public ExpenseReportStatus? Status { get; set; }
         public decimal TotalAmount { get; set; }
         public decimal? AmountApproved { get; set; }
         public decimal? AmountRejected { get; set; }
@@ -44,15 +45,16 @@ namespace ExpensesReport.Expenses.Core.Entities
         [BsonRepresentation(BsonType.String)]
         public Guid? PaidById { get; set; }
         public DateTime? PaidDate { get; set; }
-        public string StatusNotes { get; set; }
+        public string? PaidDateTimeZone { get; set; }
+        public string? StatusNotes { get; set; }
         public string? ProofOfPayment { get; set; }
         public ICollection<Expense> Expenses { get; set; }
         public ICollection<Signature> Signatures { get; set; }
 
-        public void Update(Guid userId, Guid departmentId, Guid projectId, ExpenseReportStatus status, decimal totalAmount, decimal amountApproved, decimal amountRejected, decimal amountPaid, Guid paidById, DateTime paidDate, string statusNotes, string proofOfPayment)
+        public void Update(Guid userId, Guid departamentId, Guid projectId, ExpenseReportStatus status, decimal totalAmount, decimal amountApproved, decimal amountRejected, decimal amountPaid, Guid paidById, DateTime paidDate, string statusNotes, string proofOfPayment, string? paidDateTimeZone)
         {
             UserId = userId;
-            DepartmentId = departmentId;
+            DepartamentId = departamentId;
             ProjectId = projectId;
             Status = status;
             TotalAmount = totalAmount;
@@ -61,6 +63,7 @@ namespace ExpensesReport.Expenses.Core.Entities
             AmountPaid = amountPaid;
             PaidById = paidById;
             PaidDate = paidDate;
+            PaidDateTimeZone = paidDateTimeZone;
             StatusNotes = statusNotes;
             ProofOfPayment = proofOfPayment;
             UpdatedAt = DateTime.Now;
