@@ -48,5 +48,15 @@ namespace ExpensesReport.Expenses.Core.Entities
             Receipt = receipt;
             UpdatedAt = DateTime.Now;
         }
+
+        public void Evaluate(ExpenseStatus status, Guid actionById, DateTime actionDate, string accountingNotes, string? actionDateTimeZone)
+        {
+            Status = status;
+            ActionById = actionById;
+            ActionDate = actionDate;
+            ActionDateTimeZone = actionDateTimeZone;
+            AccountingNotes = accountingNotes;
+            UpdatedAt = DateTime.Now;
+        }
     }
 }

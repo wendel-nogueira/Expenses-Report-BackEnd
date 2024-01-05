@@ -1,4 +1,5 @@
-﻿using ExpensesReport.Expenses.Core.Entities;
+﻿using ExpensesReport.Expenses.Application.InputModels.ExpenseInputModel;
+using ExpensesReport.Expenses.Core.Entities;
 using ExpensesReport.Expenses.Core.Enums;
 using System.ComponentModel.DataAnnotations;
 
@@ -6,21 +7,15 @@ namespace ExpensesReport.Expenses.Application.InputModels.ExpenseReportInputMode
 {
     public class ChangeExpenseReportInputModel
     {
+        [Required(ErrorMessage = "DepartamentId is required!")]
+        public Guid? DepartamentId { get; set; }
+
+        [Required(ErrorMessage = "ProjectId is required!")]
+        public Guid? ProjectId { get; set; }
+
         [Required(ErrorMessage = "Status is required!")]
         [EnumDataType(typeof(ExpenseReportStatus), ErrorMessage = "Status must be a valid value!")]
         public ExpenseReportStatus? Status { get; set; }
-
-        [Required(ErrorMessage = "TotalAmount is required!")]
-        [Range(0, 99999.99, ErrorMessage = "TotalAmount must be a valid value!")]
-        public decimal? TotalAmount { get; set; }
-
-        [Required(ErrorMessage = "AmountApproved is required!")]
-        [Range(0, 99999.99, ErrorMessage = "AmountApproved must be a valid value!")]
-        public decimal? AmountApproved { get; set; }
-
-        [Required(ErrorMessage = "AmountRejected is required!")]
-        [Range(0, 99999.99, ErrorMessage = "AmountRejected must be a valid value!")]
-        public decimal? AmountRejected { get; set; }
 
         [Required(ErrorMessage = "AmountPaid is required!")]
         [Range(0, 99999.99, ErrorMessage = "AmountPaid must be a valid value!")]
@@ -44,6 +39,6 @@ namespace ExpensesReport.Expenses.Application.InputModels.ExpenseReportInputMode
         [StringLength(100, ErrorMessage = "ProofOfPayment must be less than 100 characters!")]
         public string? ProofOfPayment { get; set; }
 
-        public ExpenseReport ToEntity(Guid userId, Guid departmentId, Guid projectId) => new(userId, departmentId, projectId, Status!.Value, TotalAmount!.Value, AmountApproved!.Value, AmountRejected!.Value, AmountPaid!.Value, PaidById!.Value, PaidDate!.Value, StatusNotes!, ProofOfPayment!, PaidDateTimeZone);
+        public ExpenseReport ToEntity(Guid userId, Guid departmentId, Guid projectId) => new(userId, departmentId, projectId, Status!.Value, 0, 0, 0, AmountPaid!.Value, PaidById!.Value, PaidDate!.Value, StatusNotes!, ProofOfPayment!, PaidDateTimeZone);
     }
 }

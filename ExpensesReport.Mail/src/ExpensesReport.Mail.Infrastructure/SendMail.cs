@@ -21,6 +21,7 @@ namespace ExpensesReport.Mail.Infrastructure
         public void Run([ServiceBusTrigger("mail", Connection = "ServiceBusConnection")] string message)
         {
             _logger.LogInformation(string.Format("New message received"));
+            _logger.LogInformation(message);
 
             var mailMessage = JsonConvert.DeserializeObject<MailToSend>(message);
 
@@ -28,11 +29,6 @@ namespace ExpensesReport.Mail.Infrastructure
             {
                 _logger.LogError("Error deserializing message");
                 return;
-            }
-
-            if (mailMessage.IsBodyHtml)
-            {
-                mailMessage.Body = System.Text.Encoding.UTF8.GetString(System.Convert.FromBase64String(mailMessage.Body!));
             }
 
             if (mailMessage == null)

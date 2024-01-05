@@ -6,6 +6,7 @@ namespace ExpensesReport.Expenses.Application.ViewModels
     public class ExpenseViewModel
     {
         public string? Id { get; set; }
+        public string? ExpenseAccount { get; set; }
         public decimal? Amount { get; set; }
         public DateTime? DateIncurred { get; set; }
         public string? Explanation { get; set; }
@@ -20,6 +21,7 @@ namespace ExpensesReport.Expenses.Application.ViewModels
             => new()
             {
                 Id = expense.Id,
+                ExpenseAccount = expense.ExpenseAccount,
                 Amount = expense.Amount,
                 DateIncurred = expense.DateIncurred,
                 Explanation = expense.Explanation,

@@ -26,7 +26,7 @@ namespace ExpensesReport.Expenses.Infrastructure.Persistence.Repositories
 
         public async Task<ExpenseAccount> GetByIdAsync(string id)
         {
-            return await GetCollection().Find(e => e.Id == id).FirstOrDefaultAsync();
+            return await GetCollection().Find(e => e.Id.ToString() == id).FirstOrDefaultAsync();
         }
 
         public async Task<ExpenseAccount> GetByCodeAsync(string code)

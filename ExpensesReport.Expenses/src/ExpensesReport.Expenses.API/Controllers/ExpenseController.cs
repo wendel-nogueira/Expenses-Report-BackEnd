@@ -4,6 +4,7 @@ using ExpensesReport.Expenses.Application.Services.Expense;
 using ExpensesReport.Expenses.Application.ViewModels;
 using ExpensesReport.Expenses.Core.Entities;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ExpensesReport.Expenses.API.Controllers
 {
@@ -23,7 +24,7 @@ namespace ExpensesReport.Expenses.API.Controllers
         /// </summary>
         /// <returns>Expense collection</returns>
         /// <response code="200">Success</response>
-        //[Authorize]
+        [Authorize]
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<ExpenseViewModel>), 200)]
         public async Task<IActionResult> GetAllExpenses()
@@ -40,7 +41,7 @@ namespace ExpensesReport.Expenses.API.Controllers
         /// <returns>Expense data</returns>
         /// <response code="200">Success</response>
         /// <response code="404">Not found</response>
-        //[Authorize]
+        [Authorize]
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(ExpenseViewModel), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
@@ -58,7 +59,7 @@ namespace ExpensesReport.Expenses.API.Controllers
         /// <returns>Expense collection</returns>
         /// <response code="200">Success</response>
         /// <response code="404">Not found</response>
-        //[Authorize]
+        [Authorize]
         [HttpGet("expensereport/{expenseReportId}")]
         [ProducesResponseType(typeof(IEnumerable<ExpenseViewModel>), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
@@ -77,8 +78,8 @@ namespace ExpensesReport.Expenses.API.Controllers
         /// <returns>Newly created expense</returns>
         /// <response code="201">Created</response>
         /// <response code="400">Bad request</response>
-        //[Authorize]
-        [HttpPost]
+        [Authorize]
+        [HttpPost("{expenseReportId}")]
         [ProducesResponseType(typeof(ExpenseViewModel), 201)]
         [ProducesResponseType(typeof(ProblemDetails), 400)]
         public async Task<IActionResult> AddExpense(string expenseReportId, AddExpenseInputModel inputModel)
@@ -97,7 +98,7 @@ namespace ExpensesReport.Expenses.API.Controllers
         /// <response code="200">Success</response>
         /// <response code="400">Bad request</response>
         /// <response code="404">Not found</response>
-        //[Authorize]
+        [Authorize]
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(ExpenseViewModel), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 400)]
@@ -116,13 +117,32 @@ namespace ExpensesReport.Expenses.API.Controllers
         /// <returns></returns>
         /// <response code="204">Success</response>
         /// <response code="404">Not found</response>
-        //[Authorize]
+        [Authorize]
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
         public async Task<IActionResult> DeleteExpense(string id)
         {
             await _expenseServices.DeleteExpense(id);
+
+            return NoContent();
+        }
+
+        /// <summary>
+        /// Evaluate a expense
+        /// </summary>
+        /// <param name="id">Expense identifier</param>
+        /// <param name="inputModel">Model with evaluation data</param>
+        /// <returns></returns>
+        /// <response code="204">Success</response>
+        /// <response code="404">Not found</response>
+        [Authorize]
+        [HttpPut("{id}/evaluate")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(typeof(ProblemDetails), 404)]
+        public async Task<IActionResult> EvaluateExpense(string id, EvaluateInputModel inputModel)
+        {
+            await _expenseServices.EvaluateExpense(id, inputModel);
 
             return NoContent();
         }

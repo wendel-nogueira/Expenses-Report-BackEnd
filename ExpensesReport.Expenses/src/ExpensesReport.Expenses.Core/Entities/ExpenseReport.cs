@@ -51,15 +51,11 @@ namespace ExpensesReport.Expenses.Core.Entities
         public ICollection<Expense> Expenses { get; set; }
         public ICollection<Signature> Signatures { get; set; }
 
-        public void Update(Guid userId, Guid departamentId, Guid projectId, ExpenseReportStatus status, decimal totalAmount, decimal amountApproved, decimal amountRejected, decimal amountPaid, Guid paidById, DateTime paidDate, string statusNotes, string proofOfPayment, string? paidDateTimeZone)
+        public void Update(Guid departamentId, Guid projectId, ExpenseReportStatus status, decimal? amountPaid, Guid? paidById, DateTime? paidDate, string? statusNotes, string? proofOfPayment, string? paidDateTimeZone)
         {
-            UserId = userId;
             DepartamentId = departamentId;
             ProjectId = projectId;
             Status = status;
-            TotalAmount = totalAmount;
-            AmountApproved = amountApproved;
-            AmountRejected = amountRejected;
             AmountPaid = amountPaid;
             PaidById = paidById;
             PaidDate = paidDate;
@@ -67,21 +63,6 @@ namespace ExpensesReport.Expenses.Core.Entities
             StatusNotes = statusNotes;
             ProofOfPayment = proofOfPayment;
             UpdatedAt = DateTime.Now;
-        }
-
-        public void AddExpense(Expense expense)
-        {
-            Expenses.Add(expense);
-        }
-
-        public void RemoveExpense(Expense expense)
-        {
-            Expenses.Remove(expense);
-        }
-
-        public void AddSignature(Signature signature)
-        {
-            Signatures.Add(signature);
         }
     }
 }

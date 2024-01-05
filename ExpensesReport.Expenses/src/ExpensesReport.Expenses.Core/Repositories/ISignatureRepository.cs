@@ -7,6 +7,5 @@ namespace ExpensesReport.Expenses.Core.Repositories
         public Task<IEnumerable<Signature>> GetAllAsync();
         public Task<IEnumerable<Signature>> GetAllInExpenseReportAsync(string expenseReportId);
         public Task<Signature?> GetByIdAsync(string id);
-        public Task<Signature> AddAsync(string expenseReportId, Signature signature);
     }
 }
