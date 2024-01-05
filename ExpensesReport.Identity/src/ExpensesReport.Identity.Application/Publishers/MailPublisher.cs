@@ -7,10 +7,9 @@ namespace ExpensesReport.Identity.Application.Publishers
     {
         private readonly MailQueue _mailQueue = mailQueue;
 
-        public void SendResetPasswordMail(UserIdentity identity)
+        public void SendMail(string? to, string? subject, string? title, string? userName, string? body, bool? showAction, string? actionText, string? actionUrl)
         {
-            var messageBody = $"Identity Id: {identity.Id}\n Email: {identity.Email}\n Token: {identity.ResetPasswordToken}";
-            var sendMail = new SendMail("your_email@gmail.com", identity.Email!, "Create password", messageBody, false);
+            var sendMail = new SendMail(to, subject, title, userName, body, showAction, actionText, actionUrl);
 
             _mailQueue.Send(sendMail);
         }

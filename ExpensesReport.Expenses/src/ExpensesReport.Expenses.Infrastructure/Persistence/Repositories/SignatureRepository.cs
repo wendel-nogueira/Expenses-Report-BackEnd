@@ -40,16 +40,5 @@ namespace ExpensesReport.Expenses.Infrastructure.Persistence.Repositories
 
             return signatures;
         }
-
-        public async Task<Signature> AddAsync(string expenseReportId, Signature signature)
-        {
-            var expenseReport = await GetCollection().Find(e => e.Id == expenseReportId).FirstOrDefaultAsync();
-
-            expenseReport.AddSignature(signature);
-
-            await GetCollection().ReplaceOneAsync(e => e.Id == expenseReportId, expenseReport);
-
-            return signature;
-        }
     }
 }

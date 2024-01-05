@@ -8,8 +8,5 @@ namespace ExpensesReport.Expenses.Core.Repositories
         public Task<IEnumerable<Expense>> GetAllAsync();
         public Task<Expense?> GetByIdAsync(string id);
         public Task<IEnumerable<Expense>> GetAllInExpenseReportAsync(string expenseReportId);
-        public Task<Expense> AddAsync(string expenseId, Expense expense);
-        public Task<Expense> UpdateAsync(string expenseId, Expense expense);
-        public Task DeleteAsync(string expenseReportId, Expense expense);
     }
 }

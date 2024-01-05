@@ -2,6 +2,7 @@
 using ExpensesReport.Expenses.Application.Services.Signature;
 using ExpensesReport.Expenses.Application.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ExpensesReport.Expenses.API.Controllers
 {
@@ -21,7 +22,7 @@ namespace ExpensesReport.Expenses.API.Controllers
         /// </summary>
         /// <returns>Signature collection</returns>
         /// <response code="200">Success</response>
-        //[Authorize]
+        [Authorize]
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<SignatureViewModel>), 200)]
         public async Task<IActionResult> GetAllSignature()
@@ -38,7 +39,7 @@ namespace ExpensesReport.Expenses.API.Controllers
         /// <returns>Signature data</returns>
         /// <response code="200">Success</response>
         /// <response code="404">Not found</response>
-        //[Authorize]
+        [Authorize]
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(SignatureViewModel), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
@@ -56,7 +57,7 @@ namespace ExpensesReport.Expenses.API.Controllers
         /// <returns>Signature data</returns>
         /// <response code="200">Success</response>
         /// <response code="404">Not found</response>
-        //[Authorize]
+        [Authorize]
         [HttpGet("expenseReport/{expenseReportId}")]
         [ProducesResponseType(typeof(IEnumerable<SignatureViewModel>), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
@@ -75,8 +76,8 @@ namespace ExpensesReport.Expenses.API.Controllers
         /// <returns>Newly created signature</returns>
         /// <response code="201">Created</response>
         /// <response code="400">Bad request</response>
-        //[Authorize]
-        [HttpPost]
+        [Authorize]
+        [HttpPost("{expenseReportId}")]
         [ProducesResponseType(typeof(SignatureViewModel), 201)]
         [ProducesResponseType(typeof(ProblemDetails), 400)]
         public async Task<IActionResult> CreateSignature(string expenseReportId, AddSignatureInputModel inputModel)

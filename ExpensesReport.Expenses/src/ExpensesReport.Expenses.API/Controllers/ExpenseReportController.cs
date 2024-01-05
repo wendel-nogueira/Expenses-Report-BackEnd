@@ -2,6 +2,7 @@
 using ExpensesReport.Expenses.Application.Services.ExpenseReport;
 using ExpensesReport.Expenses.Application.ViewModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ExpensesReport.Expenses.API.Controllers
 {
@@ -21,7 +22,7 @@ namespace ExpensesReport.Expenses.API.Controllers
         /// </summary>
         /// <returns>Expense reports collection</returns>
         /// <response code="200">Success</response>
-        //[Authorize]
+        [Authorize]
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<ExpenseReportViewModel>), 200)]
         public async Task<IActionResult> GetAllExpenseReports()
@@ -37,7 +38,7 @@ namespace ExpensesReport.Expenses.API.Controllers
         /// <returns>Expense report data</returns>
         /// <response code="200">Success</response>
         /// <response code="404">Not found</response>
-        //[Authorize]
+        [Authorize]
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(ExpenseReportViewModel), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
@@ -54,6 +55,7 @@ namespace ExpensesReport.Expenses.API.Controllers
         /// <returns>Expense report data</returns>
         /// <response code="200">Success</response>
         /// <response code="404">Not found</response>
+        [Authorize]
         [HttpGet("user/{userId}")]
         [ProducesResponseType(typeof(IEnumerable<ExpenseReportViewModel>), 200)]
         public async Task<IActionResult> GetExpenseReportsByUser(Guid userId)
@@ -69,6 +71,7 @@ namespace ExpensesReport.Expenses.API.Controllers
         /// <returns>Expense report data</returns>
         /// <response code="200">Success</response>
         /// <response code="404">Not found</response>
+        [Authorize]
         [HttpGet("departament/{departamentId}")]
         [ProducesResponseType(typeof(IEnumerable<ExpenseReportViewModel>), 200)]
         public async Task<IActionResult> GetExpenseReportsByDepartament(Guid departamentId)
@@ -84,6 +87,7 @@ namespace ExpensesReport.Expenses.API.Controllers
         /// <returns>Expense report data</returns>
         /// <response code="200">Success</response>
         /// <response code="404">Not found</response>
+        [Authorize]
         [HttpGet("project/{projectId}")]
         [ProducesResponseType(typeof(IEnumerable<ExpenseReportViewModel>), 200)]
         public async Task<IActionResult> GetExpenseReportsByProject(Guid projectId)
@@ -99,12 +103,18 @@ namespace ExpensesReport.Expenses.API.Controllers
         /// <returns>Newly created expense report</returns>
         /// <response code="201">Created</response>
         /// <response code="400">Bad request</response>
-        //[Authorize]
+        [Authorize]
         [HttpPost]
         [ProducesResponseType(typeof(ExpenseReportViewModel), 201)]
         [ProducesResponseType(typeof(ProblemDetails), 400)]
         public async Task<IActionResult> AddExpenseReport(AddExpenseReportInputModel inputModel)
         {
+            if (!string.IsNullOrEmpty(Request.Headers["Authorization"])
+                && Request.Headers["Authorization"].ToString().StartsWith("Bearer "))
+            {
+                _expenseReportServices.Token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            }
+
             var result = await _expenseReportServices.AddExpenseReport(inputModel);
             return Ok(result);
         }
@@ -118,13 +128,19 @@ namespace ExpensesReport.Expenses.API.Controllers
         /// <response code="200">Success</response>
         /// <response code="400">Bad request</response>
         /// <response code="404">Not found</response>
-        //[Authorize]
+        [Authorize]
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(ExpenseReportViewModel), 204)]
         [ProducesResponseType(typeof(ProblemDetails), 400)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
         public async Task<IActionResult> UpdateExpenseReport(string id, ChangeExpenseReportInputModel inputModel)
         {
+            if (!string.IsNullOrEmpty(Request.Headers["Authorization"])
+                && Request.Headers["Authorization"].ToString().StartsWith("Bearer "))
+            {
+                _expenseReportServices.Token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+            }
+
             var result = await _expenseReportServices.UpdateExpenseReport(id, inputModel);
             return Ok(result);
         }
@@ -136,7 +152,7 @@ namespace ExpensesReport.Expenses.API.Controllers
         /// <returns></returns>
         /// <response code="204">Success</response>
         /// <response code="404">Not found</response>
-        //[Authorize]
+        [Authorize]
         [HttpPatch("{id}/activate")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
@@ -153,7 +169,7 @@ namespace ExpensesReport.Expenses.API.Controllers
         /// <returns></returns>
         /// <response code="204">Success</response>
         /// <response code="404">Not found</response>
-        //[Authorize]
+        [Authorize]
         [HttpDelete("{id}/deactivate")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]

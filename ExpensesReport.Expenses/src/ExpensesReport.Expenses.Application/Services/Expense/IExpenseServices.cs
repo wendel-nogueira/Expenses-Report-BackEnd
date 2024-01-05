@@ -11,5 +11,6 @@ namespace ExpensesReport.Expenses.Application.Services.Expense
         public Task<ExpenseViewModel> AddExpense(string expenseReportId, AddExpenseInputModel inputModel);
         public Task<ExpenseViewModel> UpdateExpense(string id, ChangeExpenseInputModel inputModel);
         public Task DeleteExpense(string id);
+        public Task EvaluateExpense(string id, EvaluateInputModel inputModel);
     }
 }

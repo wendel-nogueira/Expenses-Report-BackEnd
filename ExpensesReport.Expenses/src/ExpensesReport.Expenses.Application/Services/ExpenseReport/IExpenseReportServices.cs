@@ -5,6 +5,8 @@ namespace ExpensesReport.Expenses.Application.Services.ExpenseReport
 {
     public interface IExpenseReportServices
     {
+        public string? Token { get; set; }
+
         public Task<IEnumerable<ExpenseReportViewModel>> GetAllExpenseReports();
         public Task<ExpenseReportViewModel> GetExpenseReportById(string id);
         public Task<IEnumerable<ExpenseReportViewModel>> GetExpenseReportsByUser(Guid userId);

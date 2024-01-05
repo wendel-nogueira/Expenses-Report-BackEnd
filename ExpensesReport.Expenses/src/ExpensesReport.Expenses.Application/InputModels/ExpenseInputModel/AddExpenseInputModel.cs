@@ -1,5 +1,4 @@
 ﻿using ExpensesReport.Expenses.Core.Entities;
-using ExpensesReport.Expenses.Core.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace ExpensesReport.Expenses.Application.InputModels.ExpenseInputModel

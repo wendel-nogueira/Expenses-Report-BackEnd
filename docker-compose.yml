@@ -53,6 +53,8 @@ services:
       - MYSQL_DATABASE=${IDENTITY_DATABASE}
       - MYSQL_USER=${IDENTITY_DATABASE_USER}
       - MYSQL_PASSWORD=${IDENTITY_DATABASE_PASSWORD}
+      - ServiceBusConnection=${SERVICE_BUS_CONNECTION_STRING}
+      - ApplicationUri=${APPLICATION_URI}
     ports:
       - ${iDENTITY_PORT}:80
     links:
@@ -169,6 +171,9 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - CONNECTION_STRING=${EXPENSES_CONNECTION_STRING}
       - DB_NAME=${EXPENSES_DB_NAME}
+      - ServiceBusConnection=${SERVICE_BUS_CONNECTION_STRING}
+      - ApplicationUri=${APPLICATION_URI}
+      - ApiGatewayUrl=http://api-gateway
     ports:
       - ${EXPENSE_PORT}:80
     links:
@@ -193,6 +198,7 @@ services:
       - SMTP_USERNAME=${SMTP_USERNAME}
       - SMTP_PASSWORD=${SMTP_PASSWORD}
       - SMTP_ENABLESSL=${SMTP_ENABLESSL}
+      - SMTP_FROM=${SMTP_FROM}
       - ServiceBusConnection=${SERVICE_BUS_CONNECTION_STRING}
     networks:
       - expenses-report-network
@@ -214,6 +220,24 @@ services:
     networks:
       - expenses-report-network
 
+  export-microservice:
+    container_name: export-microservice
+    image: exportmicroservice
+    restart: always
+    build:
+      context: ./ExpensesReport.Export
+      dockerfile: Dockerfile
+    ports:
+      - ${EXPORT_PORT}:80
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - StorageAccount=${STORAGE_ACCOUNT_EXPORT}
+      - Key=${STORAGE_KEY_EXPORT}
+      - Container=${STORAGE_CONTAINER_EXPORT}
+      - ApiGatewayUrl=http://api-gateway
+    networks:
+      - expenses-report-network
+
   api-gateway:
     container_name: api-gateway
     image: apigateway
@@ -231,12 +255,16 @@ services:
       - departaments-microservice
       - projects-microservice
       - files-microservice
+      - expenses-microservice
+      - export-microservice
     depends_on:
       - users-microservice
       - identities-microservice
       - departaments-microservice
       - projects-microservice
       - files-microservice
+      - expenses-microservice
+      - export-microservice
 
 networks:
   expenses-report-network:
