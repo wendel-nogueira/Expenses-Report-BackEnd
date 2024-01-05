@@ -100,7 +100,7 @@ namespace ExpensesReport.Identity.Infrastructure
         private static IServiceCollection AddQueue(this IServiceCollection services)
         {
             var configuration = services.BuildServiceProvider().GetService<IConfiguration>();
-            var serviceBusConnectionString = configuration!.GetConnectionString("ServiceBusConnection");
+            var serviceBusConnectionString = configuration!.GetConnectionString("ServiceBusConnection") ?? Environment.GetEnvironmentVariable("ServiceBusConnection");
 
             services.AddSingleton(serviceProvider =>
             {

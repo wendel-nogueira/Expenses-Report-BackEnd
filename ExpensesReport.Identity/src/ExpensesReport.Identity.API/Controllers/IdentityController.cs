@@ -149,7 +149,7 @@ namespace ExpensesReport.Identity.API.Controllers
         [ProducesResponseType(typeof(ProblemDetails), 404)]
         public async Task<IActionResult> RequestResetPassword([FromBody] ResetPasswordInputModel inputModel)
         {
-            await _identityServices.SendResetPasswordEmail(inputModel);
+            await _identityServices.SendResetPasswordEmail(inputModel, false);
 
             return NoContent();
         }

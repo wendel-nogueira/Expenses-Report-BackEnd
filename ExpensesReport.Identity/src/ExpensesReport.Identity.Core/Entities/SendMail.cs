@@ -4,20 +4,26 @@ namespace ExpensesReport.Identity.Core.Entities
 {
     public class SendMail
     {
-        public SendMail(string from, string to, string subject, string body, bool isBodyHtml)
+        public SendMail(string? to, string? subject, string? title, string? userName, string? body, bool? showAction, string? actionText, string? actionUrl)
         {
-            From = from;
             To = to;
             Subject = subject;
+            Title = title;
+            UserName = userName;
             Body = body;
-            IsBodyHtml = isBodyHtml;
+            ShowAction = showAction;
+            ActionText = actionText;
+            ActionUrl = actionUrl;
         }
 
-        public string From { get; set; }
-        public string To { get; set; }
-        public string Subject { get; set; }
-        public string Body { get; set; }
-        public bool IsBodyHtml { get; set; }
+        public string? To { get; set; }
+        public string? Subject { get; set; }
+        public string? Title { get; set; }
+        public string? UserName { get; set; }
+        public string? Body { get; set; }
+        public bool? ShowAction { get; set; }
+        public string? ActionText { get; set; }
+        public string? ActionUrl { get; set; }
 
         public string ToJson() => JsonSerializer.Serialize(this);
     }

@@ -13,11 +13,22 @@ using System.Data;
 
 namespace ExpensesReport.Identity.Application.Services
 {
-    public class IdentityServices(IUserIdentityRepository userIdentityRepository, IConfiguration config, MailQueue mailQueue) : IIdentityServices
+    public class IdentityServices : IIdentityServices
     {
-        private readonly IUserIdentityRepository _userIdentityRepository = userIdentityRepository;
-        private readonly IConfiguration _config = config;
-        private readonly MailQueue _mailQueue = mailQueue;
+        private readonly IUserIdentityRepository _userIdentityRepository;
+        private readonly IConfiguration _config;
+        private readonly MailQueue _mailQueue;
+
+        private string? ApplicationUri { get; set; }
+
+        public IdentityServices(IUserIdentityRepository userIdentityRepository, IConfiguration config, MailQueue mailQueue)
+        {
+            _userIdentityRepository = userIdentityRepository;
+            _config = config;
+            _mailQueue = mailQueue;
+
+            ApplicationUri = _config.GetSection("ApplicationUri").Value ?? Environment.GetEnvironmentVariable("ApplicationUri");
+        }
 
         public async Task<IdentityViewModel> GetIdentityById(Guid id)
         {
@@ -107,7 +118,7 @@ namespace ExpensesReport.Identity.Application.Services
             {
                 var resetPassword = new ResetPasswordInputModel { Email = identity.Email! };
 
-                await SendResetPasswordEmail(resetPassword);
+                await SendResetPasswordEmail(resetPassword, true);
 
                 throw new BadRequestException("Error on login!", new[] { "Password not created, check your email to create a password!" });
             }
@@ -122,7 +133,7 @@ namespace ExpensesReport.Identity.Application.Services
             return AuthenticationViewModel.FromEntity(token);
         }
 
-        public async Task SendResetPasswordEmail(ResetPasswordInputModel inputModel)
+        public async Task SendResetPasswordEmail(ResetPasswordInputModel inputModel, bool createPassword)
         {
             var errorsInput = InputModelValidator.Validate(inputModel);
 
@@ -141,7 +152,18 @@ namespace ExpensesReport.Identity.Application.Services
 
             await _userIdentityRepository.UpdateIdentityAsync(identity);
 
-            publisher.SendResetPasswordMail(identity);
+            publisher.SendMail(
+                inputModel.Email,
+                $"Expense report - {(createPassword ? "Create Password" : "Reset Password")}",
+                $"{(createPassword ? "Create your password" : "Reset your password")}",
+                $"user",
+                $"{(createPassword ?
+                    "Your account on our expense report platform has been successfully created. Please click the button below to create your password." :
+                    "You requested a password reset. Please click the button below to reset your password.")}",
+                true,
+                $"{(createPassword ? "Create Password" : "Reset Password")}",
+                $"{ApplicationUri}/change-password/{token}"
+            );
         }
 
         public async Task<IdentityViewModel> AddIdentity(AddIdentityInputModel inputModel)
@@ -178,7 +200,7 @@ namespace ExpensesReport.Identity.Application.Services
 
             var resetPassword = new ResetPasswordInputModel { Email = identity.Email! };
 
-            await SendResetPasswordEmail(resetPassword);
+            await SendResetPasswordEmail(resetPassword, true);
 
             return IdentityViewModel.FromEntity(identity, roleResult);
         }
