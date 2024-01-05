@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Azure.Storage.Blobs" Version="12.19.1" />
+		<PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="7.3.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="QuestPDF" Version="2023.12.2" />
+		<PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.6" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\ExpensesReport.Export.Core\ExpensesReport.Export.Core.csproj" />
+		<ProjectReference Include="..\ExpensesReport.Export.Infrastructure\ExpensesReport.Export.Infrastructure.csproj" />
+	</ItemGroup>
+
+</Project>
