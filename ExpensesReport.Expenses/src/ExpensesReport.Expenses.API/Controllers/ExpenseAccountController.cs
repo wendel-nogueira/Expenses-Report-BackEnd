@@ -22,7 +22,7 @@ namespace ExpensesReport.Expenses.API.Controllers
         /// </summary>
         /// <returns>Expense account collection</returns>
         /// <response code="200">Success</response>
-        //[Authorize]
+        [Authorize]
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<ExpenseAccountViewModel>), 200)]
         public async Task<IActionResult> GetAllExpenseAccounts()
@@ -39,7 +39,7 @@ namespace ExpensesReport.Expenses.API.Controllers
         /// <returns>Expense account data</returns>
         /// <response code="200">Success</response>
         /// <response code="404">Not found</response>
-        //[Authorize]
+        [Authorize]
         [HttpGet("{id}")]
         [ProducesResponseType(typeof(ExpenseAccountViewModel), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
@@ -57,7 +57,7 @@ namespace ExpensesReport.Expenses.API.Controllers
         /// <returns>Expense account data</returns>
         /// <response code="200">Success</response>
         /// <response code="404">Not found</response>
-        //[Authorize]
+        [Authorize]
         [HttpGet("code/{code}")]
         [ProducesResponseType(typeof(ExpenseAccountViewModel), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
@@ -75,7 +75,7 @@ namespace ExpensesReport.Expenses.API.Controllers
         /// <returns>Newly created expense account</returns>
         /// <response code="201">Created</response>
         /// <response code="400">Bad request</response>
-        //[Authorize]
+        [Authorize]
         [HttpPost]
         [ProducesResponseType(typeof(ExpenseAccountViewModel), 201)]
         [ProducesResponseType(typeof(ProblemDetails), 400)]
@@ -95,7 +95,7 @@ namespace ExpensesReport.Expenses.API.Controllers
         /// <response code="200">Success</response>
         /// <response code="400">Bad request</response>
         /// <response code="404">Not found</response>
-        //[Authorize]
+        [Authorize]
         [HttpPut("{id}")]
         [ProducesResponseType(typeof(ExpenseAccountViewModel), 200)]
         [ProducesResponseType(typeof(ProblemDetails), 400)]
@@ -114,7 +114,7 @@ namespace ExpensesReport.Expenses.API.Controllers
         /// <returns></returns>
         /// <response code="204">Success</response>
         /// <response code="404">Not found</response>
-        //[Authorize]
+        [Authorize]
         [HttpPatch("{id}/activate")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]
@@ -132,7 +132,7 @@ namespace ExpensesReport.Expenses.API.Controllers
         /// <returns></returns>
         /// <response code="204">Success</response>
         /// <response code="404">Not found</response>
-        //[Authorize]
+        [Authorize]
         [HttpDelete("{id}/deactivate")]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(ProblemDetails), 404)]

@@ -1,5 +1,6 @@
 ﻿using ExpensesReport.Expenses.Core.Entities;
 using ExpensesReport.Expenses.Core.Repositories;
+using MongoDB.Bson;
 using MongoDB.Driver;
 
 namespace ExpensesReport.Expenses.Infrastructure.Persistence.Repositories
@@ -22,7 +23,7 @@ namespace ExpensesReport.Expenses.Infrastructure.Persistence.Repositories
         public async Task<ExpenseReport?> GetExpenseReportByExpenseIdAsync(string expenseId)
         {
             var expenseReports = await GetCollection().Find(_ => true).ToListAsync();
-            return expenseReports.FirstOrDefault(e => e.Expenses.Any(e => e.Id == expenseId));
+            return expenseReports.FirstOrDefault(e => e.Expenses.Any(e => e.Id.ToString() == expenseId));
         }
 
         public async Task<IEnumerable<Expense>> GetAllAsync()
@@ -36,7 +37,7 @@ namespace ExpensesReport.Expenses.Infrastructure.Persistence.Repositories
         {
             var expenseReports = await GetCollection().Find(_ => true).ToListAsync();
 
-            return expenseReports.SelectMany(e => e.Expenses).FirstOrDefault(s => s.Id == id);
+            return expenseReports.SelectMany(e => e.Expenses).FirstOrDefault(s => s.Id.ToString() == id);
         }
 
         public async Task<IEnumerable<Expense>> GetAllInExpenseReportAsync(string expenseReportId)
@@ -44,38 +45,6 @@ namespace ExpensesReport.Expenses.Infrastructure.Persistence.Repositories
             var expenseReport = await GetCollection().Find(e => e.Id == expenseReportId).FirstOrDefaultAsync();
 
             return expenseReport.Expenses;
-        }
-
-        public async Task<Expense> AddAsync(string expenseId, Expense expense)
-        {
-            var expenseReport = await GetCollection().Find(e => e.Id == expenseId).FirstOrDefaultAsync();
-
-            expenseReport.AddExpense(expense);
-            await GetCollection().ReplaceOneAsync(e => e.Id == expenseReport.Id, expenseReport);
-
-            return expense;
-        }
-
-        public async Task<Expense> UpdateAsync(string expenseId, Expense expense)
-        {
-            var expenseReport = await GetCollection().Find(e => e.Id == expenseId).FirstOrDefaultAsync();
-            var expenseToUpdate = expenseReport.Expenses.FirstOrDefault(e => e.Id == expense.Id);
-
-            expenseReport.RemoveExpense(expenseToUpdate!);
-            expenseReport.AddExpense(expense);
-
-            await GetCollection().ReplaceOneAsync(e => e.Id == expenseReport.Id, expenseReport);
-
-            return expense;
-        }
-
-        public async Task DeleteAsync(string expenseReportId, Expense expense)
-        {
-            var expenseReport = await GetCollection().Find(e => e.Id == expenseReportId).FirstOrDefaultAsync();
-
-            expenseReport.RemoveExpense(expense!);
-
-            await GetCollection().ReplaceOneAsync(e => e.Id == expenseReport.Id, expenseReport);
         }
     }
 }

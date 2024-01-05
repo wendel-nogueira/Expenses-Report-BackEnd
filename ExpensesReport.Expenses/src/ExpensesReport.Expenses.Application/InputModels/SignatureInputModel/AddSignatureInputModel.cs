@@ -16,10 +16,13 @@ namespace ExpensesReport.Expenses.Application.InputModels.SignatureInputModel
         [DataType(DataType.Date)]
         public DateTime? SignatureDate { get; set; }
 
+        [Required(ErrorMessage = "SignatureDateTimeZone is required!")]
+        public string? SignatureDateTimeZone { get; set; }
+
         [Required(ErrorMessage = "IpAddress is required!")]
         [StringLength(50, ErrorMessage = "IpAddress must be less than 50 characters!")]
         public string? IpAddress { get; set; }
 
-        public Signature ToEntity() => new(Name!, Convert.ToBoolean(Acceptance), SignatureDate!.Value, IpAddress!);
+        public Signature ToEntity() => new(Name!, Convert.ToBoolean(Acceptance), SignatureDate!.Value, IpAddress!, SignatureDateTimeZone!);
     }
 }

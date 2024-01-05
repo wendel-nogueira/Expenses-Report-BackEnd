@@ -16,12 +16,11 @@ namespace ExpensesReport.Expenses.Application.InputModels.ExpenseReportInputMode
         [Required(ErrorMessage = "ProjectId is required!")]
         public Guid? ProjectId { get; set; }
 
-        [Required(ErrorMessage = "TotalAmount is required!")]
-        [Range(0, 99999.99, ErrorMessage = "TotalAmount must be a valid value!")]
-        public decimal? TotalAmount { get; set; }
-
+        [Required(ErrorMessage = "Expenses is required!")]
+        [MinLength(1, ErrorMessage = "Expenses must have at least one item!")]
+        [MaxLength(100, ErrorMessage = "Expenses must have a maximum of 100 items!")]
         public IEnumerable<AddExpenseInputModel>? Expenses { get; set; }
 
-        public ExpenseReport ToEntity() => new(UserId!.Value, DepartamentId!.Value, ProjectId!.Value, ExpenseReportStatus.Submitted, TotalAmount!.Value, 0, 0, 0, null, null, "", null, null);
+        public ExpenseReport ToEntity() => new(UserId!.Value, DepartamentId!.Value, ProjectId!.Value, ExpenseReportStatus.Submitted, 0, 0, 0, 0, null, null, "", null, null);
     }
 }

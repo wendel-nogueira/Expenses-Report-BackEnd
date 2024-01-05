@@ -39,7 +39,9 @@ namespace ExpensesReport.Expenses.Application.Services.Signature
             var expenseReport = await expenseReportRepository.GetByIdAsync(expenseReportId) ?? throw new NotFoundException("Expense report not found!");
             var signature = inputModel.ToEntity();
 
-            await signatureRepository.AddAsync(expenseReport.Id, signature);
+            expenseReport.Signatures.Add(signature);
+
+            await expenseReportRepository.UpdateAsync(expenseReport);
 
             return SignatureViewModel.FromEntity(signature);
         }

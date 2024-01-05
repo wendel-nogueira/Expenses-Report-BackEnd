@@ -1,6 +1,8 @@
-﻿using ExpensesReport.Expenses.Core.Repositories;
+﻿using Azure.Messaging.ServiceBus;
+using ExpensesReport.Expenses.Core.Repositories;
 using ExpensesReport.Expenses.Infrastructure.Persistence.Context;
 using ExpensesReport.Expenses.Infrastructure.Persistence.Repositories;
+using ExpensesReport.Expenses.Infrastructure.Queue;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,7 +19,8 @@ public static class InfrastructureModule
         services
             .AddPersistence()
             .AddRepositories()
-            .AddAuthentication();
+            .AddAuthentication()
+            .AddQueue();
 
         return services;
     }
@@ -86,6 +89,21 @@ public static class InfrastructureModule
                 ValidateIssuerSigningKey = true
             };
         });
+
+        return services;
+    }
+
+    private static IServiceCollection AddQueue(this IServiceCollection services)
+    {
+        var configuration = services.BuildServiceProvider().GetService<IConfiguration>();
+        var serviceBusConnectionString = configuration!.GetConnectionString("ServiceBusConnection") ?? Environment.GetEnvironmentVariable("ServiceBusConnection");
+
+        services.AddSingleton(serviceProvider =>
+        {
+            return new ServiceBusClient(serviceBusConnectionString);
+        });
+
+        services.AddScoped<MailQueue>();
 
         return services;
     }
