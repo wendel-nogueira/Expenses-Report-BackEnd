@@ -11,12 +11,14 @@ var builder = Host.CreateDefaultBuilder(args)
         services.AddOptions<SmtpConfiguration>()
         .Configure<IConfiguration>((smtpConfiguration, configuration) =>
         {
+            var from = Environment.GetEnvironmentVariable("SMTP_FROM");
             var host = Environment.GetEnvironmentVariable("SMTP_HOST");
             var port = Environment.GetEnvironmentVariable("SMTP_PORT");
             var username = Environment.GetEnvironmentVariable("SMTP_USERNAME");
             var password = Environment.GetEnvironmentVariable("SMTP_PASSWORD");
             var enableSsl = Environment.GetEnvironmentVariable("SMTP_ENABLESSL");
 
+            smtpConfiguration.From = from ?? configuration.GetValue<string>("SmtpConfiguration:From");
             smtpConfiguration.Host = host ?? configuration.GetValue<string>("SmtpConfiguration:Host");
             smtpConfiguration.Port = port != null ? int.Parse(port) : configuration.GetValue<int>("SmtpConfiguration:Port");
             smtpConfiguration.Username = username ?? configuration.GetValue<string>("SmtpConfiguration:Username");

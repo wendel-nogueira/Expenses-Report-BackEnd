@@ -7,16 +7,16 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Folder Include="NovaPasta\" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="7.0.0" />
 	  <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
 	  <ProjectReference Include="..\ExpensesReport.Mail.Core\ExpensesReport.Mail.Core.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="NovaPasta\" />
 	</ItemGroup>
 
 </Project>
